@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>I'm Chic Academy | Formación en Automaquillaje con Melany Toledo</title>
+  <meta name="description"
+    content="I'm Chic Academy: Aprende • Practica • Potencia tu belleza. Masterclass personalizada y Formación Integral Mary Kay con Melany Toledo." />
+
+  <!-- Google Fonts: Playfair Display (Luxury Serif), Cormorant Garamond & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@1,500;1,600&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Alex+Brush&display=swap"
+    rel="stylesheet" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              pink: '#FFC9D6',        // Fondo rosa suave principal
+              pinkLight: '#FFF0F3',   // Rosa pálido fondo tarjetas
+              pinkLighter: '#FFF8FA', // Blanco perlado rosado
+              pinkDeep: '#F8B4C4',    // Rosa saturado para bordes/badges
+              burgundy: '#5A0B22',    // Magenta oscuro / borgoña profundo (máximo contraste)
+              burgundyDark: '#3F0516',
+              burgundyLight: '#7A1333',
+              gold: '#D4AF37',        // Toques oro suave
+              goldLight: '#F7E7B4'
+            }
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            display: ['"Cormorant Garamond"', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+            script: ['"Alex Brush"', 'cursive']
+          },
+          boxShadow: {
+            'soft': '0 8px 24px -4px rgba(90, 11, 34, 0.08)',
+            'card': '0 16px 36px -6px rgba(90, 11, 34, 0.12), 0 4px 12px rgba(90, 11, 34, 0.04)',
+            'glow': '0 0 25px rgba(255, 201, 214, 0.6)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    .pulse-ring {
+      box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+      animation: pulse-ring-anim 2s infinite;
+    }
+
+    @keyframes pulse-ring-anim {
+      0% {
+        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+      }
+      70% {
+        box-shadow: 0 0 0 16px rgba(37, 211, 102, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+      }
+    }
+
+    /* Ocultar contenido inactivo de pestañas */
+    .tab-pane {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.25s ease-in-out;
+    }
+    .tab-pane.active {
+      display: block;
+      opacity: 1;
+    }
+  </style>
+</head>
+
+<body
+  class="bg-brand-pink text-brand-burgundy font-sans antialiased min-h-screen selection:bg-brand-burgundy selection:text-white relative overflow-x-hidden">
+
+  <!-- Top Announcement Bar -->
+  <div
+    class="bg-brand-burgundy text-brand-pinkLighter py-2 px-4 text-center text-xs sm:text-sm font-medium tracking-wide flex items-center justify-center gap-2">
+    <span class="inline-block w-2 h-2 rounded-full bg-brand-gold animate-pulse"></span>
+    <span>Inscripciones abiertas • Grupos reducidos para atención personalizada</span>
+    <span class="hidden md:inline text-brand-pinkDeep">|</span>
+    <a href="#cursos" class="hidden md:inline underline hover:text-white transition-colors">Ver opciones de curso</a>
+  </div>
+
+  <!-- HEADER / NAVEGACIÓN -->
+  <header
+    class="sticky top-0 z-50 bg-brand-pink/90 backdrop-blur-md border-b border-brand-burgundy/10 transition-all duration-300">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+
+      <!-- Logo con etiqueta <img> y fallback ("I'm Chic - By Melany Toledo") -->
+      <a href="#inicio"
+        class="flex items-center gap-3 group focus:outline-none focus:ring-2 focus:ring-brand-burgundy rounded-xl p-1"
+        aria-label="I'm Chic By Melany Toledo - Inicio">
+        <div
+          class="relative w-12 h-12 flex-shrink-0 bg-white/85 rounded-full p-1 border border-brand-burgundy/15 shadow-sm group-hover:scale-105 transition-transform duration-300 flex items-center justify-center overflow-hidden">
+          <img src="/assets/logo-im-chic.png" alt="Logo I'm Chic - By Melany Toledo"
+            class="w-full h-full object-cover rounded-full"
+            onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg viewBox=\'0 0 100 100\' fill=\'none\' xmlns=\'http://www.w3.org/2000/svg\'><path d=\'M50 34 C44 26 30 24 32 36 C34 44 48 42 50 44 C52 42 66 44 68 36 C70 24 56 26 50 34 Z\' fill=\'%23F8B4C4\' stroke=\'%235A0B22\' stroke-width=\'2.5\'/><circle cx=\'50\' cy=\'39\' r=\'4\' fill=\'%235A0B22\'/><path d=\'M40 70 C38 52 46 44 50 40\' stroke=\'%234A6B35\' stroke-width=\'2.8\'/><path d=\'M60 72 C62 54 54 44 50 40\' stroke=\'%234A6B35\' stroke-width=\'2.8\'/><circle cx=\'38\' cy=\'72\' r=\'14\' fill=\'%238E163B\'/><circle cx=\'62\' cy=\'74\' r=\'14\' fill=\'%23A81C46\'/></svg>';" />
+        </div>
+        <div class="flex flex-col">
+          <span class="font-serif text-xl sm:text-2xl font-bold tracking-tight text-brand-burgundy leading-none">
+            I'm Chic
+          </span>
+          <span class="text-[10px] sm:text-xs font-semibold tracking-[0.25em] text-brand-burgundyLight uppercase mt-1">
+            By Melany Toledo
+          </span>
+        </div>
+      </a>
+
+      <!-- Navegación de Escritorio -->
+      <nav class="hidden md:flex items-center gap-8 font-medium text-sm text-brand-burgundy">
+        <a href="#inicio" class="hover:text-brand-burgundyLight transition-colors font-semibold py-1">Inicio</a>
+        <a href="#cursos" class="hover:text-brand-burgundyLight transition-colors py-1">Cursos & Talleres</a>
+        <a href="#detalles" class="hover:text-brand-burgundyLight transition-colors py-1">Inversión</a>
+        <a href="#contacto" class="hover:text-brand-burgundyLight transition-colors py-1">Contacto</a>
+      </nav>
+
+      <!-- Botón CTA Header Desktop -->
+      <div class="hidden md:flex items-center gap-3">
+        <a href="https://wa.me/5493813553492?text=Hola%20Melany!%20Quiero%20más%20información%20sobre%20los%20cursos%20de%20I'm%20Chic%20Academy"
+          target="_blank" rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 bg-brand-burgundy hover:bg-brand-burgundyLight text-white px-5 py-2.5 rounded-full text-sm font-semibold tracking-wide shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all duration-300">
+          <i data-lucide="message-circle" class="w-4 h-4 text-green-400"></i>
+          <span>Escribime</span>
+        </a>
+      </div>
+
+      <!-- Botón Menú Hamburguesa Móvil -->
+      <button id="mobileMenuBtn" aria-label="Abrir menú de navegación"
+        class="md:hidden p-2 rounded-xl text-brand-burgundy hover:bg-white/40 focus:outline-none focus:ring-2 focus:ring-brand-burgundy transition-colors">
+        <i data-lucide="menu" id="menuIcon" class="w-6 h-6"></i>
+        <i data-lucide="x" id="closeIcon" class="w-6 h-6 hidden"></i>
+      </button>
+    </div>
+
+    <!-- Menú Desplegable Móvil -->
+    <div id="mobileMenu"
+      class="hidden md:hidden bg-white/95 backdrop-blur-lg border-b border-brand-burgundy/10 px-6 py-6 shadow-xl transition-all duration-300">
+      <div class="flex flex-col gap-4 font-medium text-base text-brand-burgundy">
+        <a href="#inicio" class="mobile-nav-link py-2 border-b border-brand-pink/60 flex items-center justify-between">
+          <span>Inicio</span>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-brand-burgundyLight"></i>
+        </a>
+        <a href="#cursos" class="mobile-nav-link py-2 border-b border-brand-pink/60 flex items-center justify-between">
+          <span>Cursos & Talleres</span>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-brand-burgundyLight"></i>
+        </a>
+        <a href="#detalles" class="mobile-nav-link py-2 border-b border-brand-pink/60 flex items-center justify-between">
+          <span>Inversión</span>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-brand-burgundyLight"></i>
+        </a>
+        <a href="#contacto" class="mobile-nav-link py-2 flex items-center justify-between">
+          <span>Contacto</span>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-brand-burgundyLight"></i>
+        </a>
+        <div class="pt-4">
+          <a href="#cursos"
+            class="mobile-nav-link w-full flex items-center justify-center gap-2 bg-brand-burgundy text-white py-3.5 px-6 rounded-full font-semibold shadow-soft">
+            <i data-lucide="sparkles" class="w-4 h-4 text-brand-gold"></i>
+            <span>Elegí tu curso hoy</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- 1. HERO SECTION -->
+    <section id="inicio" class="relative pt-10 pb-16 md:pt-20 md:pb-24 overflow-hidden">
+      <!-- Círculos difuminados de fondo -->
+      <div
+        class="absolute -top-12 -right-12 w-80 h-80 bg-white/50 rounded-full filter blur-3xl -z-10 pointer-events-none">
+      </div>
+      <div
+        class="absolute bottom-0 -left-16 w-96 h-96 bg-brand-pinkDeep/40 rounded-full filter blur-3xl -z-10 pointer-events-none">
+      </div>
+
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 text-center">
+
+        <!-- Badge de Estudio Profesional -->
+        <div
+          class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 backdrop-blur-sm border border-brand-burgundy/15 text-brand-burgundy text-xs sm:text-sm font-semibold mb-6 shadow-sm">
+          <span class="text-brand-burgundyLight">✨</span>
+          <span>Edición 2026 • Academia & Estudio de Belleza</span>
+        </div>
+
+        <!-- H1 Principal -->
+        <h1
+          class="font-serif text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-brand-burgundy mb-4 uppercase leading-[1.1]">
+          I'M CHIC ACADEMY
+        </h1>
+
+        <!-- Subtítulo Destacado -->
+        <div class="max-w-3xl mx-auto mb-6">
+          <p
+            class="font-serif italic text-2xl sm:text-3xl md:text-4xl font-medium text-brand-burgundyLight leading-relaxed">
+            Aprende • Practica • Potencia tu belleza
+          </p>
+        </div>
+
+        <!-- Párrafo introductorio -->
+        <div class="max-w-2xl mx-auto mb-10">
+          <div
+            class="inline-block p-4 sm:p-5 rounded-2xl bg-white/75 backdrop-blur-md border border-white/90 shadow-soft">
+            <p class="text-base sm:text-lg text-brand-burgundy font-medium leading-relaxed">
+              Por <span class="font-bold underline decoration-brand-pinkDeep underline-offset-4">Melany Toledo</span> -
+              Maquilladora Profesional y Asesora de Belleza Integral.
+            </p>
+          </div>
+        </div>
+
+        <!-- CTA Principal: Elegí tu curso hoy -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+          <a href="#cursos"
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-brand-burgundy hover:bg-brand-burgundyDark text-white px-9 py-4.5 rounded-full text-lg font-bold tracking-wide shadow-card hover:shadow-glow hover:-translate-y-1 transition-all duration-300 group">
+            <i data-lucide="sparkles" class="w-5 h-5 text-brand-gold group-hover:rotate-12 transition-transform"></i>
+            <span>Elegí tu curso hoy</span>
+            <i data-lucide="arrow-down" class="w-5 h-5 group-hover:translate-y-1 transition-transform"></i>
+          </a>
+          <a href="https://wa.me/5493813553492?text=Hola%20Melany!%20Quiero%20hacerte%20una%20consulta%20sobre%20I'm%20Chic%20Academy"
+            target="_blank" rel="noopener noreferrer"
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white/85 hover:bg-white text-brand-burgundy border border-brand-burgundy/20 px-7 py-4.5 rounded-full text-base font-semibold transition-all duration-300 shadow-sm hover:shadow-soft">
+            <i data-lucide="message-circle" class="w-5 h-5 text-green-600"></i>
+            <span>Consultar por WhatsApp</span>
+          </a>
+        </div>
+
+        <!-- Mini Features Trust Icons -->
+        <div
+          class="grid grid-cols-2 sm:grid-cols-3 gap-3 max-w-xl mx-auto pt-4 border-t border-brand-burgundy/15 text-xs sm:text-sm text-brand-burgundy font-medium">
+          <div class="flex items-center justify-center gap-2">
+            <i data-lucide="check" class="w-4 h-4 text-brand-burgundyLight"></i>
+            <span>100% Práctico</span>
+          </div>
+          <div class="flex items-center justify-center gap-2">
+            <i data-lucide="users" class="w-4 h-4 text-brand-burgundyLight"></i>
+            <span>Grupos Reducidos</span>
+          </div>
+          <div class="col-span-2 sm:col-span-1 flex items-center justify-center gap-2">
+            <i data-lucide="award" class="w-4 h-4 text-brand-burgundyLight"></i>
+            <span>Certificado Incluido</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 2. SECCIÓN DE CURSOS (PESTAÑAS / TABS PARA NO SATURAR LA VISTA) -->
+    <section id="cursos" class="py-16 md:py-24 bg-brand-pinkLight/90 relative scroll-mt-20">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6">
+
+        <div class="text-center max-w-2xl mx-auto mb-10">
+          <span
+            class="inline-block px-4 py-1.5 rounded-full bg-white/80 text-brand-burgundy text-xs font-bold uppercase tracking-wider mb-3 border border-brand-burgundy/15">
+            Nuestros Programas
+          </span>
+          <h2 class="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-brand-burgundy mb-3">
+            Elegí la formación ideal para vos
+          </h2>
+          <p class="text-sm sm:text-base text-brand-burgundy/80 font-medium">
+            Seleccioná una pestaña para explorar el temario y los beneficios de cada programa sin abrumarte.
+          </p>
+        </div>
+
+        <!-- SELECTOR DE PESTAÑAS (TABS CONTROLLER) -->
+        <div class="flex justify-center mb-10">
+          <div class="inline-flex p-1.5 rounded-full bg-white/90 border border-brand-burgundy/20 shadow-soft max-w-full overflow-x-auto">
+            <button id="tabBtnA" onclick="switchTab('tabA')"
+              class="tab-button px-5 sm:px-8 py-3 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-2 bg-brand-burgundy text-white shadow-sm"
+              aria-selected="true">
+              <i data-lucide="sparkles" class="w-4 h-4 text-brand-gold"></i>
+              <span>Masterclass Automaquillaje</span>
+            </button>
+            <button id="tabBtnB" onclick="switchTab('tabB')"
+              class="tab-button px-5 sm:px-8 py-3 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-2 text-brand-burgundy hover:bg-brand-pink/40"
+              aria-selected="false">
+              <i data-lucide="briefcase" class="w-4 h-4 text-brand-burgundyLight"></i>
+              <span>Formación Integral Mary Kay</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- CONTENIDO PESTAÑA A: MASTERCLASS DE AUTOMAQUILLAJE PERSONALIZADO -->
+        <div id="tabA" class="tab-pane active space-y-12">
+          
+          <!-- Eslogan Destacado A -->
+          <div class="text-center max-w-3xl mx-auto bg-white/70 p-6 rounded-3xl border border-brand-burgundy/15 shadow-soft">
+            <span class="inline-block text-xs uppercase tracking-widest text-brand-burgundyLight font-bold mb-1">
+              Taller Intensivo Exclusivo
+            </span>
+            <p class="font-serif text-xl sm:text-2xl font-bold text-brand-burgundy leading-snug">
+              “Hacé de tu maquillaje una herramienta de confianza. Una experiencia práctica, personalizada y pensada para vos.”
+            </p>
+          </div>
+
+          <!-- LAYOUT GRID: A un lado beneficios con íconos, al otro la imagen destacada (/assets/masterclass-hero.png) -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            <!-- Columna Izquierda: Beneficios -->
+            <div class="lg:col-span-7 space-y-4">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-9 h-9 rounded-xl bg-brand-burgundy text-white flex items-center justify-center font-bold text-sm shadow-sm">
+                  <i data-lucide="paintbrush" class="w-5 h-5 text-pink-200"></i>
+                </div>
+                <h3 class="font-serif text-2xl sm:text-3xl font-bold text-brand-burgundy">
+                  ¿Qué te llevás con este taller?
+                </h3>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                
+                <!-- Beneficio 1: Brocha -->
+                <div class="bg-white/90 p-4 rounded-2xl border border-brand-pinkDeep/40 shadow-sm flex items-start gap-3 hover:-translate-y-1 transition-all">
+                  <div class="w-9 h-9 rounded-xl bg-brand-pink flex items-center justify-center text-brand-burgundy flex-shrink-0 mt-0.5">
+                    <i data-lucide="paintbrush" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-brand-burgundy leading-snug">Resultados profesionales</h4>
+                    <p class="text-xs text-brand-burgundy/80 mt-0.5">Sin depender de nadie más.</p>
+                  </div>
+                </div>
+
+                <!-- Beneficio 2: Rostro -->
+                <div class="bg-white/90 p-4 rounded-2xl border border-brand-pinkDeep/40 shadow-sm flex items-start gap-3 hover:-translate-y-1 transition-all">
+                  <div class="w-9 h-9 rounded-xl bg-brand-pink flex items-center justify-center text-brand-burgundy flex-shrink-0 mt-0.5">
+                    <i data-lucide="smile" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-brand-burgundy leading-snug">Conocer tu rostro y tu piel</h4>
+                    <p class="text-xs text-brand-burgundy/80 mt-0.5">Técnicas que te favorecen a vos.</p>
+                  </div>
+                </div>
+
+                <!-- Beneficio 3: Ojo -->
+                <div class="bg-white/90 p-4 rounded-2xl border border-brand-pinkDeep/40 shadow-sm flex items-start gap-3 hover:-translate-y-1 transition-all">
+                  <div class="w-9 h-9 rounded-xl bg-brand-pink flex items-center justify-center text-brand-burgundy flex-shrink-0 mt-0.5">
+                    <i data-lucide="eye" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-brand-burgundy leading-snug">Dominar día y noche</h4>
+                    <p class="text-xs text-brand-burgundy/80 mt-0.5">Transformación ágil de tu look.</p>
+                  </div>
+                </div>
+
+                <!-- Beneficio 4: Skincare -->
+                <div class="bg-white/90 p-4 rounded-2xl border border-brand-pinkDeep/40 shadow-sm flex items-start gap-3 hover:-translate-y-1 transition-all">
+                  <div class="w-9 h-9 rounded-xl bg-brand-pink flex items-center justify-center text-brand-burgundy flex-shrink-0 mt-0.5">
+                    <i data-lucide="sparkles" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-brand-burgundy leading-snug">Skincare diario</h4>
+                    <p class="text-xs text-brand-burgundy/80 mt-0.5">Preparación y cuidado correcto.</p>
+                  </div>
+                </div>
+
+                <!-- Beneficio 5: Brochas y compras -->
+                <div class="bg-white/90 p-4 rounded-2xl border border-brand-pinkDeep/40 shadow-sm flex items-start gap-3 hover:-translate-y-1 transition-all">
+                  <div class="w-9 h-9 rounded-xl bg-brand-pink flex items-center justify-center text-brand-burgundy flex-shrink-0 mt-0.5">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-brand-burgundy leading-snug">Herramientas correctas</h4>
+                    <p class="text-xs text-brand-burgundy/80 mt-0.5">Qué brocha usar sin gastar de más.</p>
+                  </div>
+                </div>
+
+                <!-- Beneficio 6: Larga duración -->
+                <div class="bg-white/90 p-4 rounded-2xl border border-brand-pinkDeep/40 shadow-sm flex items-start gap-3 hover:-translate-y-1 transition-all">
+                  <div class="w-9 h-9 rounded-xl bg-brand-pink flex items-center justify-center text-brand-burgundy flex-shrink-0 mt-0.5">
+                    <i data-lucide="clock" class="w-4 h-4"></i>
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-brand-burgundy leading-snug">Técnica de larga duración</h4>
+                    <p class="text-xs text-brand-burgundy/80 mt-0.5">Ideal para eventos y fiestas.</p>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Columna Derecha: Imagen Destacada Hero Masterclass -->
+            <div class="lg:col-span-5 relative flex justify-center">
+              <div class="relative w-full max-w-sm aspect-[4/5] rounded-[2.5rem] overflow-hidden p-2 bg-gradient-to-b from-white to-brand-pink shadow-2xl border-4 border-white">
+                <img src="/assets/masterclass-hero.png" 
+                     alt="Chica maquillándose frente al espejo - Masterclass Automaquillaje"
+                     class="w-full h-full object-cover rounded-[2rem]"
+                     onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800&q=80';" />
+                <div class="absolute bottom-6 left-6 right-6 p-3.5 rounded-2xl bg-white/85 backdrop-blur-md border border-white shadow-lg text-center">
+                  <span class="text-xs font-bold text-brand-burgundy block">Técnica 1 a 1 en vivo</span>
+                  <span class="text-[11px] text-brand-burgundyLight">Práctica personalizada frente al espejo</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Temario Masterclass (Acordeón de 2 Clases con Fotos) -->
+          <div>
+            <div class="flex items-center gap-3 mb-6">
+              <div class="w-9 h-9 rounded-xl bg-brand-burgundy text-white flex items-center justify-center font-bold text-sm">
+                <i data-lucide="sparkles" class="w-4 h-4 text-brand-gold"></i>
+              </div>
+              <h3 class="font-serif text-2xl sm:text-3xl font-bold text-brand-burgundy">
+                Temario de la Masterclass (2 Clases Prácticas)
+              </h3>
+            </div>
+
+            <div class="space-y-4">
+              
+              <!-- Primera Clase (Incluye /assets/clase-1.png) -->
+              <div class="bg-white rounded-3xl border border-brand-burgundy/15 shadow-soft overflow-hidden">
+                <button onclick="toggleAccordion('accA1')"
+                  class="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-brand-pinkLight/50 transition-colors focus:outline-none">
+                  <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-brand-pink flex items-center justify-center text-brand-burgundy font-serif font-bold text-lg">
+                      1
+                    </div>
+                    <div>
+                      <h4 class="font-serif text-lg sm:text-xl font-bold text-brand-burgundy">
+                        Primera Clase: Preparación y Look de Día
+                      </h4>
+                      <p class="text-xs sm:text-sm text-brand-burgundyLight font-medium">Bases fundamentales, visagismo y aplicación práctica</p>
+                    </div>
+                  </div>
+                  <div id="icon-accA1" class="w-8 h-8 rounded-full bg-brand-pinkLight flex items-center justify-center text-brand-burgundy transition-transform duration-300">
+                    <i data-lucide="chevron-down" class="w-5 h-5"></i>
+                  </div>
+                </button>
+                <div id="content-accA1" class="px-6 pb-6 pt-2 text-brand-burgundy text-sm sm:text-base border-t border-brand-pinkLight">
+                  <div class="flex flex-col md:flex-row gap-6 items-center">
+                    <ul class="flex-1 space-y-2.5">
+                      <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-4 h-4 text-brand-burgundyLight flex-shrink-0"></i><span><strong>Diagnóstico de piel:</strong> Reconocé tu tipo y necesidad puntual.</span></li>
+                      <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-4 h-4 text-brand-burgundyLight flex-shrink-0"></i><span><strong>Preparación:</strong> Skincare pre-maquillaje para fijación duradera.</span></li>
+                      <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-4 h-4 text-brand-burgundyLight flex-shrink-0"></i><span><strong>Corrección:</strong> Ojeras, manchas e imperfecciones con tono exacto.</span></li>
+                      <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-4 h-4 text-brand-burgundyLight flex-shrink-0"></i><span><strong>Brochas:</strong> Qué herramientas son indispensables y su uso real.</span></li>
+                      <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-4 h-4 text-brand-burgundyLight flex-shrink-0"></i><span><strong>Maquillaje de día:</strong> Acabado luminoso, natural y armonioso.</span></li>
+                    </ul>
+                    <div class="w-full sm:w-44 flex-shrink-0">
+                      <img src="/assets/clase-1.png" alt="Retrato chica con collar de perlas - Clase 1"
+                        class="w-full h-44 object-cover rounded-2xl shadow-lg border-2 border-white"
+                        onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80';" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Segunda Clase (Incluye /assets/clase-2.png) -->
+              <div class="bg-white rounded-3xl border border-brand-burgundy/15 shadow-soft overflow-hidden">
+                <button onclick="toggleAccordion('accA2')"
+                  class="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-brand-pinkLight/50 transition-colors focus:outline-none">
+                  <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-brand-pink flex items-center justify-center text-brand-burgundy font-serif font-bold text-lg">
+                      2
+                    </div>
+                    <div>
+                      <h4 class="font-serif text-lg sm:text-xl font-bold text-brand-burgundy">
+                        Segunda Clase: Noche, Larga Duración y Rutina
+                      </h4>
+                      <p class="text-xs sm:text-sm text-brand-burgundyLight font-medium">Glamour nocturno, sellado profesional y cuidado restaurador</p>
+                    </div>
+                  </div>
+                  <div id="icon-accA2" class="w-8 h-8 rounded-full bg-brand-pinkLight flex items-center justify-center text-brand-burgundy transition-transform duration-300">
+                    <i data-lucide="chevron-down" class="w-5 h-5"></i>
+                  </div>
+                </button>
+                <div id="content-accA2" class="px-6 pb-6 pt-2 text-brand-burgundy text-sm sm:text-base border-t border-brand-pinkLight">
+                  <div class="flex flex-col md:flex-row gap-6 items-center">
+                    <ul class="flex-1 space-y-2.5">
+                      <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-4 h-4 text-brand-burgundyLight flex-shrink-0"></i><span><strong>Repaso:</strong> Perfeccionamiento de la técnica adquirida en la clase 1.</span></li>
+                      <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-4 h-4 text-brand-burgundyLight flex-shrink-0"></i><span><strong>Maquillaje de noche:</strong> Profundidad de mirada, delineado y volumen.</span></li>
+                      <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-4 h-4 text-brand-burgundyLight flex-shrink-0"></i><span><strong>Larga duración:</strong> Sellado estratégico contra calor, transpiración y roces.</span></li>
+                      <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-4 h-4 text-brand-burgundyLight flex-shrink-0"></i><span><strong>Desmaquillado:</strong> Remoción correcta sin fricción dañina.</span></li>
+                      <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-4 h-4 text-brand-burgundyLight flex-shrink-0"></i><span><strong>Skincare nocturno:</strong> Rutina reparadora para despertar radiante.</span></li>
+                    </ul>
+                    <div class="w-full sm:w-44 flex-shrink-0">
+                      <img src="/assets/clase-2.png" alt="Chica sacándose una selfie en el espejo - Clase 2"
+                        class="w-full h-44 object-cover rounded-2xl shadow-lg border-2 border-white"
+                        onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80';" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- CTA específico Pestaña A -->
+          <div class="text-center pt-2">
+            <a href="https://wa.me/5493813553492?text=Hola%20Melany!%20Quiero%20reservar%20mi%20lugar%20para%20la%20Masterclass%20de%20Automaquillaje"
+              target="_blank" rel="noopener noreferrer"
+              class="inline-flex items-center gap-3 bg-brand-burgundy hover:bg-brand-burgundyDark text-white px-8 py-4 rounded-full font-bold shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all duration-300">
+              <i data-lucide="message-circle" class="w-5 h-5 text-green-400"></i>
+              <span>Consultar fechas de la Masterclass</span>
+            </a>
+          </div>
+
+        </div>
+
+        <!-- CONTENIDO PESTAÑA B: FORMACIÓN INTEGRAL MARY KAY -->
+        <div id="tabB" class="tab-pane space-y-12">
+          
+          <!-- Eslogan Destacado B -->
+          <div class="text-center max-w-3xl mx-auto bg-white/70 p-6 rounded-3xl border border-brand-burgundy/15 shadow-soft">
+            <span class="inline-block text-xs uppercase tracking-widest text-brand-burgundyLight font-bold mb-1">
+              Programa Profesional & Asesoría
+            </span>
+            <p class="font-serif text-2xl sm:text-3xl font-bold text-brand-burgundy leading-snug">
+              “Tu belleza, también es tu negocio.”
+            </p>
+          </div>
+
+          <!-- Beneficios Formación Integral (Grid de 6 ítems) -->
+          <div>
+            <div class="flex items-center gap-3 mb-6">
+              <div class="w-9 h-9 rounded-xl bg-brand-burgundy text-white flex items-center justify-center font-bold text-sm">
+                💎
+              </div>
+              <h3 class="font-serif text-2xl sm:text-3xl font-bold text-brand-burgundy">
+                Beneficios de la Formación
+              </h3>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              
+              <!-- Beneficio 1 -->
+              <div class="bg-white rounded-2xl p-6 shadow-soft border border-brand-pinkDeep/40 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+                <div>
+                  <div class="w-10 h-10 rounded-xl bg-brand-pink flex items-center justify-center text-brand-burgundy mb-4 font-bold text-base">
+                    1
+                  </div>
+                  <p class="text-sm sm:text-base font-semibold text-brand-burgundy leading-snug">
+                    Dominarás tu propio automaquillaje.
+                  </p>
+                </div>
+                <div class="mt-4 pt-3 border-t border-brand-pink/50 flex items-center gap-1.5 text-xs text-brand-burgundyLight font-semibold">
+                  <i data-lucide="check" class="w-3.5 h-3.5 text-green-600"></i>
+                  <span>Sos tu mejor vidriera</span>
+                </div>
+              </div>
+
+              <!-- Beneficio 2 -->
+              <div class="bg-white rounded-2xl p-6 shadow-soft border border-brand-pinkDeep/40 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+                <div>
+                  <div class="w-10 h-10 rounded-xl bg-brand-pink flex items-center justify-center text-brand-burgundy mb-4 font-bold text-base">
+                    2
+                  </div>
+                  <p class="text-sm sm:text-base font-semibold text-brand-burgundy leading-snug">
+                    Conocerás cada producto Mary Kay a fondo.
+                  </p>
+                </div>
+                <div class="mt-4 pt-3 border-t border-brand-pink/50 flex items-center gap-1.5 text-xs text-brand-burgundyLight font-semibold">
+                  <i data-lucide="check" class="w-3.5 h-3.5 text-green-600"></i>
+                  <span>Dominio técnico</span>
+                </div>
+              </div>
+
+              <!-- Beneficio 3 -->
+              <div class="bg-white rounded-2xl p-6 shadow-soft border border-brand-pinkDeep/40 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+                <div>
+                  <div class="w-10 h-10 rounded-xl bg-brand-pink flex items-center justify-center text-brand-burgundy mb-4 font-bold text-base">
+                    3
+                  </div>
+                  <p class="text-sm sm:text-base font-semibold text-brand-burgundy leading-snug">
+                    Sabrás qué recomendar a cada cliente según su piel.
+                  </p>
+                </div>
+                <div class="mt-4 pt-3 border-t border-brand-pink/50 flex items-center gap-1.5 text-xs text-brand-burgundyLight font-semibold">
+                  <i data-lucide="check" class="w-3.5 h-3.5 text-green-600"></i>
+                  <span>Asesoría asertiva</span>
+                </div>
+              </div>
+
+              <!-- Beneficio 4 -->
+              <div class="bg-white rounded-2xl p-6 shadow-soft border border-brand-pinkDeep/40 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+                <div>
+                  <div class="w-10 h-10 rounded-xl bg-brand-pink flex items-center justify-center text-brand-burgundy mb-4 font-bold text-base">
+                    4
+                  </div>
+                  <p class="text-sm sm:text-base font-semibold text-brand-burgundy leading-snug">
+                    Aprenderás a explicarle a tus clientas cómo usar cada producto con argumentos reales.
+                  </p>
+                </div>
+                <div class="mt-4 pt-3 border-t border-brand-pink/50 flex items-center gap-1.5 text-xs text-brand-burgundyLight font-semibold">
+                  <i data-lucide="check" class="w-3.5 h-3.5 text-green-600"></i>
+                  <span>Argumentos sólidos</span>
+                </div>
+              </div>
+
+              <!-- Beneficio 5 -->
+              <div class="bg-white rounded-2xl p-6 shadow-soft border border-brand-pinkDeep/40 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+                <div>
+                  <div class="w-10 h-10 rounded-xl bg-brand-pink flex items-center justify-center text-brand-burgundy mb-4 font-bold text-base">
+                    5
+                  </div>
+                  <p class="text-sm sm:text-base font-semibold text-brand-burgundy leading-snug">
+                    Ganarás confianza para vender con criterio profesional.
+                  </p>
+                </div>
+                <div class="mt-4 pt-3 border-t border-brand-pink/50 flex items-center gap-1.5 text-xs text-brand-burgundyLight font-semibold">
+                  <i data-lucide="check" class="w-3.5 h-3.5 text-green-600"></i>
+                  <span>Ventas sin presión</span>
+                </div>
+              </div>
+
+              <!-- Beneficio 6 -->
+              <div class="bg-white rounded-2xl p-6 shadow-soft border border-brand-pinkDeep/40 hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+                <div>
+                  <div class="w-10 h-10 rounded-xl bg-brand-pink flex items-center justify-center text-brand-burgundy mb-4 font-bold text-base">
+                    6
+                  </div>
+                  <p class="text-sm sm:text-base font-semibold text-brand-burgundy leading-snug">
+                    Sumarás una habilidad extra a tu negocio (Redes sociales).
+                  </p>
+                </div>
+                <div class="mt-4 pt-3 border-t border-brand-pink/50 flex items-center gap-1.5 text-xs text-brand-burgundyLight font-semibold">
+                  <i data-lucide="check" class="w-3.5 h-3.5 text-green-600"></i>
+                  <span>Marketing digital</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Temario Formación Integral (Acordeones ordenados por bloques para evitar saturación) -->
+          <div>
+            <div class="flex items-center gap-3 mb-6">
+              <div class="w-9 h-9 rounded-xl bg-brand-burgundy text-white flex items-center justify-center font-bold text-sm">
+                <i data-lucide="layers" class="w-4 h-4"></i>
+              </div>
+              <h3 class="font-serif text-2xl sm:text-3xl font-bold text-brand-burgundy">
+                Temario: 9 Clases Prácticas + Módulo Bonus
+              </h3>
+            </div>
+
+            <!-- Acordeones organizados en 3 bloques claros -->
+            <div class="space-y-4">
+              
+              <!-- Bloque 1: Clases 1 a 3 -->
+              <div class="bg-white rounded-2xl border border-brand-burgundy/15 shadow-soft overflow-hidden">
+                <button onclick="toggleAccordion('accB1')"
+                  class="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-brand-pinkLight/50 transition-colors focus:outline-none">
+                  <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-brand-pink flex items-center justify-center text-brand-burgundy font-serif font-bold text-sm">
+                      1-3
+                    </div>
+                    <div>
+                      <h4 class="font-serif text-lg sm:text-xl font-bold text-brand-burgundy">
+                        Bloque 1: Diagnóstico de Piel, Limpieza y Preparación
+                      </h4>
+                      <p class="text-xs sm:text-sm text-brand-burgundyLight font-medium">Clases 1, 2 y 3</p>
+                    </div>
+                  </div>
+                  <div id="icon-accB1" class="w-8 h-8 rounded-full bg-brand-pinkLight flex items-center justify-center text-brand-burgundy transition-transform duration-300">
+                    <i data-lucide="chevron-down" class="w-5 h-5"></i>
+                  </div>
+                </button>
+                <div id="content-accB1" class="px-6 pb-6 pt-2 text-brand-burgundy text-sm sm:text-base border-t border-brand-pinkLight">
+                  <div class="space-y-3">
+                    <div class="p-3 bg-brand-pinkLight/60 rounded-xl">
+                      <strong>Clase 1:</strong> Presentación y diagnóstico de piel (seca, grasa, mixta, sensible).
+                    </div>
+                    <div class="p-3 bg-brand-pinkLight/60 rounded-xl">
+                      <strong>Clase 2:</strong> Limpieza facial y brochas.
+                    </div>
+                    <div class="p-3 bg-brand-pinkLight/60 rounded-xl">
+                      <strong>Clase 3:</strong> Preparación de piel (Corrección, CC Cream, Máscara).
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bloque 2: Clases 4 a 6 -->
+              <div class="bg-white rounded-2xl border border-brand-burgundy/15 shadow-soft overflow-hidden">
+                <button onclick="toggleAccordion('accB2')"
+                  class="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-brand-pinkLight/50 transition-colors focus:outline-none">
+                  <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-brand-pink flex items-center justify-center text-brand-burgundy font-serif font-bold text-sm">
+                      4-6
+                    </div>
+                    <div>
+                      <h4 class="font-serif text-lg sm:text-xl font-bold text-brand-burgundy">
+                        Bloque 2: Cejas, Rostro, Contorno y Labios
+                      </h4>
+                      <p class="text-xs sm:text-sm text-brand-burgundyLight font-medium">Clases 4, 5 y 6</p>
+                    </div>
+                  </div>
+                  <div id="icon-accB2" class="w-8 h-8 rounded-full bg-brand-pinkLight flex items-center justify-center text-brand-burgundy transition-transform duration-300">
+                    <i data-lucide="chevron-down" class="w-5 h-5"></i>
+                  </div>
+                </button>
+                <div id="content-accB2" class="px-6 pb-6 pt-2 text-brand-burgundy text-sm sm:text-base border-t border-brand-pinkLight">
+                  <div class="space-y-3">
+                    <div class="p-3 bg-brand-pinkLight/60 rounded-xl">
+                      <strong>Clase 4:</strong> Visagismo de cejas.
+                    </div>
+                    <div class="p-3 bg-brand-pinkLight/60 rounded-xl">
+                      <strong>Clase 5:</strong> Base y contorno (Rubor, iluminador, gloss).
+                    </div>
+                    <div class="p-3 bg-brand-pinkLight/60 rounded-xl">
+                      <strong>Clase 6:</strong> Labios (Tipos de labial).
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bloque 3: Clases 7 a 9 + Bonus -->
+              <div class="bg-white rounded-2xl border border-brand-burgundy/15 shadow-soft overflow-hidden">
+                <button onclick="toggleAccordion('accB3')"
+                  class="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-brand-pinkLight/50 transition-colors focus:outline-none">
+                  <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-brand-pink flex items-center justify-center text-brand-burgundy font-serif font-bold text-sm">
+                      7-9+
+                    </div>
+                    <div>
+                      <h4 class="font-serif text-lg sm:text-xl font-bold text-brand-burgundy">
+                        Bloque 3: Looks Día & Noche, Desmaquillado y Marketing
+                      </h4>
+                      <p class="text-xs sm:text-sm text-brand-burgundyLight font-medium">Clases 7, 8, 9 y Módulo Bonus</p>
+                    </div>
+                  </div>
+                  <div id="icon-accB3" class="w-8 h-8 rounded-full bg-brand-pinkLight flex items-center justify-center text-brand-burgundy transition-transform duration-300">
+                    <i data-lucide="chevron-down" class="w-5 h-5"></i>
+                  </div>
+                </button>
+                <div id="content-accB3" class="px-6 pb-6 pt-2 text-brand-burgundy text-sm sm:text-base border-t border-brand-pinkLight">
+                  <div class="space-y-3">
+                    <div class="p-3 bg-brand-pinkLight/60 rounded-xl">
+                      <strong>Clase 7:</strong> Maquillaje de día.
+                    </div>
+                    <div class="p-3 bg-brand-pinkLight/60 rounded-xl">
+                      <strong>Clase 8:</strong> Maquillaje de noche.
+                    </div>
+                    <div class="p-3 bg-brand-pinkLight/60 rounded-xl">
+                      <strong>Clase 9:</strong> Desmaquillado profesional.
+                    </div>
+                    <div class="p-3 bg-brand-burgundy text-white rounded-xl flex items-center gap-3">
+                      <span class="px-2 py-0.5 bg-brand-gold text-brand-burgundy text-xs font-bold rounded">BONUS</span>
+                      <span><strong>Redes Sociales y Marketing:</strong> Estrategias para vender y captar clientas.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- CTA específico Pestaña B -->
+          <div class="text-center pt-2">
+            <a href="https://wa.me/5493813553492?text=Hola%20Melany!%20Quiero%20inscribirme%20en%20la%20Formación%20Integral%20Mary%20Kay"
+              target="_blank" rel="noopener noreferrer"
+              class="inline-flex items-center gap-3 bg-brand-burgundy hover:bg-brand-burgundyDark text-white px-8 py-4 rounded-full font-bold shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all duration-300">
+              <i data-lucide="message-circle" class="w-5 h-5 text-green-400"></i>
+              <span>Consultar cupos Formación Integral</span>
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 3. SECCIÓN: INVERTÍ EN TU FORMACIÓN (Detalles y Beneficios Incluidos) -->
+    <section id="detalles" class="py-16 md:py-24 relative">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6">
+
+        <div class="text-center max-w-2xl mx-auto mb-14">
+          <span
+            class="inline-block px-4 py-1.5 rounded-full bg-white/80 text-brand-burgundy text-xs font-bold uppercase tracking-wider mb-3 border border-brand-burgundy/15">
+            Membresía & Valores
+          </span>
+          <h2 class="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-brand-burgundy mb-4">
+            Invertí en tu Formación
+          </h2>
+          <p class="text-base sm:text-lg text-brand-burgundy/85">
+            Una inversión que potencia tu confianza personal y se amortiza rápidamente en tu negocio.
+          </p>
+        </div>
+
+        <!-- Caja de Información Destacada -->
+        <div
+          class="max-w-3xl mx-auto bg-white rounded-3xl p-6 sm:p-10 shadow-card border-2 border-brand-burgundy/20 relative">
+
+          <!-- Badge Superior "Grupo Reducido" -->
+          <div
+            class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-brand-burgundy text-white px-5 py-1.5 rounded-full text-xs sm:text-sm font-semibold tracking-wide shadow-md flex items-center gap-1.5 whitespace-nowrap">
+            <i data-lucide="sparkles" class="w-4 h-4 text-brand-gold"></i>
+            <span>Grupo reducido para una atención personalizada</span>
+          </div>
+
+          <!-- Header de Precios y Duración -->
+          <div class="pt-4 pb-8 border-b border-brand-pink text-center">
+            <span class="text-xs uppercase tracking-widest text-brand-burgundyLight font-bold block mb-1">
+              Inversión Formación Integral
+            </span>
+            <div class="flex items-baseline justify-center gap-2">
+              <span class="font-serif text-4xl sm:text-5xl font-extrabold text-brand-burgundy">
+                $130.000
+              </span>
+              <span class="text-brand-burgundy/80 font-medium text-sm sm:text-base">
+                por mes
+              </span>
+            </div>
+            <p class="text-sm font-bold text-brand-burgundyLight mt-2">
+              En 2 cuotas mensuales de $130.000
+            </p>
+
+            <div
+              class="inline-flex items-center gap-2 mt-4 px-4 py-1.5 rounded-xl bg-brand-pink/60 text-brand-burgundy text-sm font-semibold">
+              <i data-lucide="clock" class="w-4 h-4 text-brand-burgundyLight"></i>
+              <span>Duración: 2 meses (1 clase por semana)</span>
+            </div>
+          </div>
+
+          <!-- Lista de Ítems Incluidos con Íconos -->
+          <div class="py-8">
+            <h3 class="font-serif text-lg font-bold text-brand-burgundy mb-6 text-center sm:text-left">
+              Tu experiencia incluye:
+            </h3>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+              <!-- Item 1: Coffee break -->
+              <div class="flex items-start gap-3.5 p-3.5 rounded-2xl bg-brand-pinkLight/50 border border-brand-pink">
+                <div
+                  class="w-10 h-10 rounded-xl bg-brand-pink flex items-center justify-center text-brand-burgundy flex-shrink-0">
+                  <i data-lucide="coffee" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-sm text-brand-burgundy">Coffee break en cada encuentro</h4>
+                  <p class="text-xs text-brand-burgundy/80">Espacio cálido para compartir y relajarse.</p>
+                </div>
+              </div>
+
+              <!-- Item 2: Material en PDF -->
+              <div class="flex items-start gap-3.5 p-3.5 rounded-2xl bg-brand-pinkLight/50 border border-brand-pink">
+                <div
+                  class="w-10 h-10 rounded-xl bg-brand-pink flex items-center justify-center text-brand-burgundy flex-shrink-0">
+                  <i data-lucide="file-text" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-sm text-brand-burgundy">Material de estudio en PDF</h4>
+                  <p class="text-xs text-brand-burgundy/80">Guías detalladas para repasar siempre.</p>
+                </div>
+              </div>
+
+              <!-- Item 3: Recomendación personalizada -->
+              <div class="flex items-start gap-3.5 p-3.5 rounded-2xl bg-brand-pinkLight/50 border border-brand-pink">
+                <div
+                  class="w-10 h-10 rounded-xl bg-brand-pink flex items-center justify-center text-brand-burgundy flex-shrink-0">
+                  <i data-lucide="heart-handshake" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-sm text-brand-burgundy">Recomendación personalizada</h4>
+                  <p class="text-xs text-brand-burgundy/80">Asesoría individual adaptada a tus rasgos.</p>
+                </div>
+              </div>
+
+              <!-- Item 4: Materiales disponibles en clase -->
+              <div class="flex items-start gap-3.5 p-3.5 rounded-2xl bg-brand-pinkLight/50 border border-brand-pink">
+                <div
+                  class="w-10 h-10 rounded-xl bg-brand-pink flex items-center justify-center text-brand-burgundy flex-shrink-0">
+                  <i data-lucide="palette" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-sm text-brand-burgundy">Materiales disponibles en clase</h4>
+                  <p class="text-xs text-brand-burgundy/80">Todos los productos e insumos para tus prácticas presenciales.</p>
+                </div>
+              </div>
+
+              <!-- Item 5: Certificado de finalización -->
+              <div
+                class="col-span-1 sm:col-span-2 flex items-start gap-3.5 p-3.5 rounded-2xl bg-brand-pinkLight/50 border border-brand-pink">
+                <div
+                  class="w-10 h-10 rounded-xl bg-brand-pink flex items-center justify-center text-brand-burgundy flex-shrink-0">
+                  <i data-lucide="award" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h4 class="font-bold text-sm text-brand-burgundy">Certificado de finalización</h4>
+                  <p class="text-xs text-brand-burgundy/80">Certificación que acredita tu formación en I'm Chic Academy.</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Botón de Acción dentro de la Tarjeta -->
+          <div class="pt-2 text-center">
+            <a href="https://wa.me/5493813553492?text=Hola%20Melany!%20Quiero%20asegurar%20mi%20lugar%20en%20I'm%20Chic%20Academy"
+              target="_blank" rel="noopener noreferrer"
+              class="w-full inline-flex items-center justify-center gap-3 bg-brand-burgundy hover:bg-brand-burgundyDark text-white py-4 px-8 rounded-full text-lg font-bold shadow-soft hover:shadow-card hover:-translate-y-0.5 transition-all duration-300">
+              <i data-lucide="check" class="w-5 h-5 text-green-400"></i>
+              <span>Quiero Inscribirme Ahora</span>
+            </a>
+            <p class="text-xs text-brand-burgundy/70 mt-3">
+              Consultá también aranceles y fechas de la Masterclass individual por WhatsApp
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 4. FOOTER / SECCIÓN DE CONTACTO FINAL -->
+    <section id="contacto" class="py-16 md:py-24 bg-brand-burgundy text-white relative overflow-hidden">
+      <!-- Círculos decorativos -->
+      <div class="absolute -top-16 -right-16 w-64 h-64 bg-white/5 rounded-full filter blur-2xl pointer-events-none">
+      </div>
+      <div
+        class="absolute -bottom-16 -left-16 w-80 h-80 bg-brand-pinkDeep/10 rounded-full filter blur-2xl pointer-events-none">
+      </div>
+
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center relative z-10">
+
+        <!-- Logo en Footer con etiqueta <img> -->
+        <div class="w-16 h-16 mx-auto bg-white rounded-full p-1 mb-6 shadow-md flex items-center justify-center overflow-hidden">
+          <img src="/assets/logo-im-chic.png" alt="Logo I'm Chic Footer"
+            class="w-full h-full object-cover rounded-full"
+            onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg viewBox=\'0 0 100 100\' fill=\'none\' xmlns=\'http://www.w3.org/2000/svg\'><path d=\'M50 34 C44 26 30 24 32 36 C34 44 48 42 50 44 C52 42 66 44 68 36 C70 24 56 26 50 34 Z\' fill=\'%23F8B4C4\' stroke=\'%235A0B22\' stroke-width=\'2.5\'/><circle cx=\'50\' cy=\'39\' r=\'4\' fill=\'%235A0B22\'/><path d=\'M40 70 C38 52 46 44 50 40\' stroke=\'%234A6B35\' stroke-width=\'2.8\'/><path d=\'M60 72 C62 54 54 44 50 40\' stroke=\'%234A6B35\' stroke-width=\'2.8\'/><circle cx=\'38\' cy=\'72\' r=\'14\' fill=\'%238E163B\'/><circle cx=\'62\' cy=\'74\' r=\'14\' fill=\'%23A81C46\'/></svg>';" />
+        </div>
+
+        <!-- Texto Solicitado -->
+        <h2 class="font-serif text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-brand-pinkLighter">
+          ¡Reservá tu lugar! Cupos limitados para atención personalizada.
+        </h2>
+
+        <p class="text-base sm:text-lg text-brand-pinkDeep max-w-xl mx-auto mb-10 leading-relaxed">
+          Escribime directamente para resolver tus dudas, consultar horarios y asegurar tu vacante en la academia.
+        </p>
+
+        <!-- Botón Grande de WhatsApp Centrado -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-14">
+          <a href="https://wa.me/5493813553492?text=Hola%20Melany!%20Quiero%20reservar%20mi%20lugar%20en%20I'm%20Chic%20Academy"
+            target="_blank" rel="noopener noreferrer"
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-3 bg-[#25D366] hover:bg-[#20ba59] text-white px-8 py-4.5 rounded-full text-lg sm:text-xl font-bold shadow-card hover:scale-105 transition-all duration-300">
+            <i data-lucide="message-circle" class="w-6 h-6 fill-current"></i>
+            <span>WhatsApp 381-3553492</span>
+          </a>
+        </div>
+
+        <div
+          class="pt-10 border-t border-white/15 flex flex-col sm:flex-row items-center justify-between text-xs sm:text-sm text-brand-pinkDeep/80 gap-4">
+          <p>© 2026 I'm Chic Academy - By Melany Toledo. Todos los derechos reservados.</p>
+          <p class="flex items-center gap-2">
+            <span>Maquillaje Profesional & Asesoría Integral</span>
+            <span>•</span>
+            <span>Tucumán, Argentina</span>
+          </p>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Script interactivo: Tabs, Acordeones, Menú Móvil y Lucide -->
+  <script>
+    // Inicializar íconos
+    lucide.createIcons();
+
+    // Función para alternar pestañas (Tabs)
+    function switchTab(tabId) {
+      // Ocultar todos los paneles
+      document.querySelectorAll('.tab-pane').forEach(pane => {
+        pane.classList.remove('active');
+      });
+
+      // Resetear estilos de botones
+      const btnA = document.getElementById('tabBtnA');
+      const btnB = document.getElementById('tabBtnB');
+
+      if (tabId === 'tabA') {
+        document.getElementById('tabA').classList.add('active');
+        btnA.className = "tab-button px-5 sm:px-8 py-3 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-2 bg-brand-burgundy text-white shadow-sm";
+        btnB.className = "tab-button px-5 sm:px-8 py-3 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-2 text-brand-burgundy hover:bg-brand-pink/40";
+        btnA.setAttribute('aria-selected', 'true');
+        btnB.setAttribute('aria-selected', 'false');
+      } else {
+        document.getElementById('tabB').classList.add('active');
+        btnB.className = "tab-button px-5 sm:px-8 py-3 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-2 bg-brand-burgundy text-white shadow-sm";
+        btnA.className = "tab-button px-5 sm:px-8 py-3 rounded-full text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-2 text-brand-burgundy hover:bg-brand-pink/40";
+        btnB.setAttribute('aria-selected', 'true');
+        btnA.setAttribute('aria-selected', 'false');
+      }
+      // Recrear iconos si hiciera falta
+      lucide.createIcons();
+    }
+
+    // Función para alternar acordeones
+    function toggleAccordion(id) {
+      const content = document.getElementById('content-' + id);
+      const icon = document.getElementById('icon-' + id);
+      if (!content) return;
+      const isHidden = content.classList.toggle('hidden');
+      if (icon) {
+        icon.style.transform = isHidden ? 'rotate(-90deg)' : 'rotate(0deg)';
+      }
+    }
+
+    // Menú hamburguesa móvil
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const menuIcon = document.getElementById('menuIcon');
+    const closeIcon = document.getElementById('closeIcon');
+    const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+
+    if (mobileMenuBtn && mobileMenu) {
+      mobileMenuBtn.addEventListener('click', () => {
+        const isClosed = mobileMenu.classList.contains('hidden');
+        if (isClosed) {
+          mobileMenu.classList.remove('hidden');
+          menuIcon.classList.add('hidden');
+          closeIcon.classList.remove('hidden');
+        } else {
+          mobileMenu.classList.add('hidden');
+          menuIcon.classList.remove('hidden');
+          closeIcon.classList.add('hidden');
+        }
+      });
+
+      mobileNavLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.add('hidden');
+          menuIcon.classList.remove('hidden');
+          closeIcon.classList.add('hidden');
+        });
+      });
+    }
+  </script>
+</body>
+
+</html>
