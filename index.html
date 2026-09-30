@@ -40,6 +40,46 @@
       max-width: 100%;
       height: auto;
     }
+
+    /* ── Utilities ── */
+    .scrollbar-none::-webkit-scrollbar {
+      display: none;
+    }
+    .scrollbar-none {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* ── Course tab buttons (gumroad-inspired) ── */
+    .course-tab-btn {
+      --bg: #5A0B22;
+      --hover-bg: #FFC9D6;
+      --hover-text: #5A0B22;
+      color: #fff;
+      cursor: pointer;
+      border: 2px solid var(--bg);
+      border-radius: 6px;
+      padding: 0.75em 2em;
+      background: var(--bg);
+      font-size: 0.875rem;
+      font-weight: 600;
+      transition: color 0.2s, background 0.2s, transform 0.2s, box-shadow 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .course-tab-btn:hover,
+    .course-tab-btn[data-active="true"] {
+      color: var(--hover-text);
+      background: var(--hover-bg);
+      border-color: var(--bg);
+      transform: translate(-0.2rem, -0.2rem);
+      box-shadow: 0.2rem 0.2rem 0 var(--bg);
+    }
+    .course-tab-btn:active {
+      transform: translate(0);
+      box-shadow: none;
+    }
   </style>
 
   <!-- Tailwind CSS CDN -->

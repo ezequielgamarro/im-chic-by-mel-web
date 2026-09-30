@@ -1,0 +1,67 @@
+================================================================================
+GUIA DE INSTALACION Y DESPLIEGUE LOCAL - I'M CHIC ACADEMY
+================================================================================
+
+Este proyecto es una aplicacion web desarrollada en React 19 empaquetada con Vite.
+A continuacion se detallan los requisitos de software previos y los comandos exactos
+para instalar y levantar la pagina en tu computadora.
+
+--------------------------------------------------------------------------------
+1. SOFTWARE PREVIO REQUERIDO (PRERREQUISITOS)
+--------------------------------------------------------------------------------
+
+Debes tener instalado en tu sistema operativo:
+
+* Node.js (Version LTS recomendada: v20.x o superior):
+  - Que es: Entorno de ejecucion JavaScript necesario para correr las herramientas de construccion.
+  - Como descargarlo: Ingresa a https://nodejs.org/ y descarga la version "LTS" (Long Term Support).
+  - Al instalar Node.js, tambien se instala automaticamente "npm" (Node Package Manager).
+
+* Verificacion de instalacion (abre una terminal PowerShell o CMD):
+  - node -v   (Deberia mostrar v20.x.x o similar)
+  - npm -v    (Deberia mostrar v10.x.x o similar)
+
+--------------------------------------------------------------------------------
+2. PASOS PARA INSTALAR DEPENDENCIAS
+--------------------------------------------------------------------------------
+
+Abre una terminal (PowerShell o Simbolo del Sistema / CMD) en la carpeta del proyecto:
+  Ruta actual: C:\Users\WinterOS\Documents\im chic by mel
+
+Ejecuta el siguiente comando para instalar todos los paquetes declarados en el package.json:
+
+  npm install
+
+(Esto descargara y configurara automaticamente librerias como React 19, Vite,
+Framer Motion, Lucide React y React Router en la carpeta local "node_modules").
+
+--------------------------------------------------------------------------------
+3. COMANDOS PARA LEVANTAR Y OPERAR LA PAGINA
+--------------------------------------------------------------------------------
+
+A. MODO DESARROLLO (Para probar y editar en vivo):
+   Ejecuta:
+     npm run dev
+
+   - Vite iniciara el servidor local (generalmente en http://localhost:5173).
+   - Abre tu navegador web e ingresa a: http://localhost:5173
+   - Cualquier cambio que guardes en los archivos se vera reflejado al instante.
+   - Para detener el servidor: presiona Ctrl + C en la terminal.
+
+B. MODO PRODUCCION (Compilacion optimizada):
+   Si deseas generar la version final lista para desplegar en un servidor web:
+     npm run build
+
+   Para previsualizar localmente esa version optimizada:
+     npm run preview
+
+--------------------------------------------------------------------------------
+4. RESUMEN DE DEPENDENCIAS DEL PROYECTO
+--------------------------------------------------------------------------------
+* React & React DOM (^19.0.0): Nucleo de interfaz declarativa.
+* Vite (^6.2.0): Bundler y servidor de desarrollo ultrarrapido (ESM nativo).
+* React Router DOM (^7.18.4): Enrutamiento client-side (SPA).
+* Framer Motion (^13.3.0): Motor de transiciones e interactividad.
+* Lucide React (^1.46.0): Paquete optimizado de iconografia vectorial.
+* Tailwind CSS: Gestionado mediante CDN con configuracion en index.html.
+================================================================================

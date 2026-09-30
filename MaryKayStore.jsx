@@ -1,3 +1,4 @@
+import Navbar from "./src/components/Navbar";
 import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -454,118 +455,7 @@ export default function MaryKayStore() {
         </div>
       </motion.button>
 
-      {/* Top Announcement Bar */}
-      <motion.div
-        initial={{ y: -40, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        className="bg-[#5A0B22] text-[#FFF8FA] py-2.5 px-4 text-center text-xs sm:text-sm font-medium tracking-wide flex items-center justify-center gap-2 z-40 relative"
-      >
-        <span className="inline-block w-2 h-2 rounded-full bg-[#D4AF37] animate-ping" />
-        <span>Consultora de Belleza Independiente Mary Kay • Envíos y asesoramiento personalizado</span>
-      </motion.div>
-
-      {/* HEADER / NAVEGACIÓN */}
-      <header className="sticky top-0 z-40 bg-gradient-to-b from-[#FFC9D6] via-[#FFD2DE]/95 to-[#FFDEE6]/90 backdrop-blur-md transition-all duration-300 relative shadow-[0_10px_30px_-10px_rgba(255,201,214,0.6)]">
-        <div className="absolute -bottom-6 left-0 right-0 h-6 bg-gradient-to-b from-[#FFDEE6]/90 via-[#FFEBF0]/50 to-transparent pointer-events-none" />
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
-
-          <div className="flex items-center gap-8 lg:gap-12">
-            {/* Logo */}
-            <motion.a
-              href="#inicio"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="flex items-center gap-3.5 focus:outline-none rounded-2xl p-1 group"
-            >
-              <div className="relative w-12 h-12 sm:w-14 sm:h-14 flex-shrink-0 bg-white rounded-full p-0 shadow-md border border-white/80 ring-2 ring-[#FFC9D6] flex items-center justify-center overflow-hidden transition-all duration-300 group-hover:shadow-lg">
-                <img
-                  src="/assets/logo-im-chic.png"
-                  alt="Logo I'm Chic - By Melany Toledo"
-                  className="w-full h-full object-cover scale-[1.25] rounded-full"
-                />
-              </div>
-              <div className="flex flex-col">
-                <span className="font-serif text-xl sm:text-2xl font-bold tracking-tight text-[#5A0B22] leading-none">I'm Chic</span>
-                <span className="text-[10px] sm:text-[11px] font-semibold tracking-[0.1em] text-[#7A1333] uppercase mt-1">Consultora Mary Kay</span>
-              </div>
-            </motion.a>
-
-            {/* Nav Desktop */}
-            <nav className="hidden md:flex items-center gap-0.5 font-medium text-sm text-[#5A0B22]">
-              <Link to="/" className="relative px-3.5 py-1.5 rounded-full hover:bg-[#5A0B22]/8 hover:text-[#5A0B22] transition-all duration-200 tracking-wide">Inicio</Link>
-              <Link to="/cursos" className="relative px-3.5 py-1.5 rounded-full hover:bg-[#5A0B22]/8 hover:text-[#5A0B22] transition-all duration-200 tracking-wide">Cursos</Link>
-              <Link to="/galeria" className="relative px-3.5 py-1.5 rounded-full hover:bg-[#5A0B22]/8 hover:text-[#5A0B22] transition-all duration-200 tracking-wide">Galería</Link>
-              <Link to="/tienda" className="relative px-3.5 py-1.5 rounded-full font-bold text-[#7A1333] bg-white/50 hover:bg-[#5A0B22]/8 transition-all duration-200 tracking-wide">Tienda MK</Link>
-              <Link to="/inversion" className="relative px-3.5 py-1.5 rounded-full hover:bg-[#5A0B22]/8 hover:text-[#5A0B22] transition-all duration-200 tracking-wide">Inversión</Link>
-              <Link to="/contacto" className="relative px-3.5 py-1.5 rounded-full hover:bg-[#5A0B22]/8 hover:text-[#5A0B22] transition-all duration-200 tracking-wide">Contacto</Link>
-            </nav>
-          </div>
-
-          {/* CTA Desktop */}
-          <div className="hidden md:flex items-center">
-            <WhatsAppButton
-              phoneNumber={whatsappNumber}
-              message="¡Hola Melany! Quiero ver el catálogo de Mary Kay."
-              open={true}
-              size="sm"
-              text="Contacto"
-            />
-          </div>
-
-          {/* Hamburger móvil */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Abrir menú"
-            className="md:hidden p-2 text-[#5A0B22] hover:bg-[#FFC9D6]/30 rounded-lg transition-colors focus:outline-none"
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
-        </div>
-
-        {/* Menú Desplegable Móvil */}
-        <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="md:hidden bg-white/95 backdrop-blur-lg px-6 py-6 shadow-2xl rounded-b-3xl overflow-hidden absolute w-full"
-            >
-              <div className="flex flex-col gap-2 font-medium text-base text-[#5A0B22]">
-                {[
-                  ['/', 'Inicio'],
-                  ['/cursos', 'Cursos & Masterclass'],
-                  ['/galeria', 'Galería'],
-                  ['/tienda', 'Tienda Mary Kay'],
-                  ['/inversion', 'Inversión'],
-                  ['/contacto', 'Contacto'],
-                ].map(([path, label]) => (
-                  <Link
-                    key={path}
-                    to={path}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="py-2.5 border-b border-[#FFC9D6]/40 flex items-center justify-between"
-                  >
-                    <span>{label}</span>
-                    <ChevronRight className="w-4 h-4 text-[#7A1333]" />
-                  </Link>
-                ))}
-                <div className="pt-4 flex items-center justify-center">
-                  <WhatsAppButton
-                    phoneNumber={whatsappNumber}
-                    message="¡Hola Melany! Quiero ver el catálogo."
-                    open={true}
-                    size="md"
-                    text="Escribime por WhatsApp"
-                  />
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </header>
+      <Navbar />
 
       <main>
         {/* HERO SECTION */}

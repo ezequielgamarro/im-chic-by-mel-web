@@ -1,3 +1,4 @@
+import Navbar from "./src/components/Navbar";
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { MapPin, Clock, MessageCircle, Phone, ChevronRight, Menu, X, Send, Sparkles } from 'lucide-react';
@@ -95,54 +96,7 @@ export default function ContactoPage() {
   return (
     <div className="min-h-screen bg-[#FFF0F3] text-[#5A0B22] font-sans overflow-x-hidden">
 
-      {/* Announcement Bar */}
-      <motion.div initial={{ y: -40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.5 }}
-        className="bg-[#5A0B22] text-[#FFF8FA] py-2.5 px-4 text-center text-xs sm:text-sm font-medium flex items-center justify-center gap-2 z-50 relative">
-        <span className="inline-block w-2 h-2 rounded-full bg-[#D4AF37] animate-ping" />
-        <span>Contacto & Reservas • Respondemos por WhatsApp</span>
-      </motion.div>
-
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-gradient-to-b from-[#FFC9D6] via-[#FFD2DE]/95 to-[#FFDEE6]/90 backdrop-blur-md transition-all duration-300 relative shadow-[0_10px_30px_-10px_rgba(255,201,214,0.6)]">
-        <div className="absolute -bottom-6 left-0 right-0 h-6 bg-gradient-to-b from-[#FFDEE6]/90 via-[#FFEBF0]/50 to-transparent pointer-events-none" />
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-white shadow-md ring-2 ring-[#5A0B22]/15 overflow-hidden flex items-center justify-center">
-              <img src="/assets/logo-im-chic.png" alt="Logo" className="w-full h-full object-cover scale-[1.25]"
-                onError={(e) => { e.target.style.display = 'none'; e.target.parentElement.innerHTML = '<span class="font-serif font-bold text-sm text-[#5A0B22]">IC</span>'; }} />
-            </div>
-            <div className="flex flex-col">
-              <span className="font-serif text-xl font-bold text-[#5A0B22] leading-none">I'm Chic</span>
-              <span className="text-[10px] font-semibold tracking-[0.15em] text-[#7A1333] uppercase">By Melany Toledo</span>
-            </div>
-          </Link>
-          <nav className="hidden md:flex items-center gap-0.5 text-sm font-medium text-[#5A0B22]">
-            <Link to="/" className="relative px-3.5 py-1.5 rounded-full hover:bg-[#5A0B22]/8 hover:text-[#5A0B22] transition-all duration-200 tracking-wide">Inicio</Link>
-            <Link to="/cursos" className="relative px-3.5 py-1.5 rounded-full hover:bg-[#5A0B22]/8 hover:text-[#5A0B22] transition-all duration-200 tracking-wide">Cursos</Link>
-            <Link to="/galeria" className="relative px-3.5 py-1.5 rounded-full hover:bg-[#5A0B22]/8 hover:text-[#5A0B22] transition-all duration-200 tracking-wide">Galería</Link>
-            <Link to="/tienda" className="relative px-3.5 py-1.5 rounded-full hover:bg-[#5A0B22]/8 hover:text-[#5A0B22] transition-all duration-200 tracking-wide">Tienda MK</Link>
-            <Link to="/inversion" className="relative px-3.5 py-1.5 rounded-full hover:bg-[#5A0B22]/8 hover:text-[#5A0B22] transition-all duration-200 tracking-wide">Inversión</Link>
-            <Link to="/contacto" className="relative px-3.5 py-1.5 rounded-full hover:bg-[#5A0B22]/8 hover:text-[#5A0B22] transition-all duration-200 tracking-wide">Contacto</Link>
-          </nav>
-          <div className="hidden md:block">
-            <WhatsAppButton phoneNumber={whatsappNumber} message="¡Hola Melany! Te contacto desde la web." open={true} size="sm" text="Escribime" />
-          </div>
-          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2 text-[#5A0B22]">
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
-        </div>
-        {mobileMenuOpen && (
-          <div className="md:hidden bg-white/95 backdrop-blur-lg px-6 py-5 shadow-2xl rounded-b-3xl absolute w-full">
-            <div className="flex flex-col gap-2 text-base font-medium text-[#5A0B22]">
-              {[['/', 'Inicio'], ['/cursos', 'Cursos'], ['/galeria', 'Galería'], ['/tienda', 'Tienda MK'], ['/inversion', 'Inversión'], ['/contacto', 'Contacto']].map(([path, label]) => (
-                <Link key={path} to={path} onClick={() => setMobileMenuOpen(false)} className="py-2.5 border-b border-[#FFC9D6]/40 flex items-center justify-between">
-                  <span>{label}</span><ChevronRight className="w-4 h-4 text-[#7A1333]" />
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
-      </header>
+      <Navbar />
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
 
