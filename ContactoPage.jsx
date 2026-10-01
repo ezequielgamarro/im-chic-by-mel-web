@@ -13,6 +13,7 @@ function InstagramIcon({ className }) {
 }
 import { Link } from 'react-router-dom';
 import WhatsAppButton from './src/components/WhatsAppButton';
+import InstagramButton from './src/components/InstagramButton';
 
 const whatsappNumber = "5493813553492";
 
@@ -204,7 +205,11 @@ export default function ContactoPage() {
         </div>
       </main>
 
-      <footer className="py-6 border-t border-[#5A0B22]/10 text-center text-sm text-[#5A0B22]/50 mt-4">
+      <footer className="py-6 border-t border-[#5A0B22]/10 text-center text-sm text-[#5A0B22]/70 mt-4">
+        <div className="flex items-center justify-center gap-3 mb-3">
+          <WhatsAppButton open={false} text="WhatsApp" />
+          <InstagramButton />
+        </div>
         © 2026 I'm Chic By Melany Toledo — Estudio de Belleza Integral
       </footer>
     </div>

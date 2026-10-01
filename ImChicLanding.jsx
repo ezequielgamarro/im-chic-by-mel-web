@@ -1,4 +1,4 @@
-import Navbar from "./src/components/Navbar";
+﻿import Navbar from "./src/components/Navbar";
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -88,7 +88,23 @@ export default function ImChicLanding() {
   };
 
   const whatsappNumber = "5493813553492";
-  const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent("¡Hola Melany! Quiero más información sobre I'm Chic Academy")}`;
+
+  // Datos del curso activo para el mensaje de inscripción por WhatsApp
+  const courseInfo = activeTab === 'tabA'
+    ? {
+        name: 'Masterclass Automaquillaje',
+        price: '$65.000',
+        detail: '2 clases prácticas personalizadas',
+      }
+    : {
+        name: 'Formación Integral Mary Kay',
+        price: '$130.000 por mes',
+        detail: 'Duración: 2 meses (1 clase práctica por semana). En 2 cuotas mensuales de $130.000',
+      };
+
+  const whatsappInscripcionUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+    `¡Hola Melany! Quiero inscribirme en la ${courseInfo.name}.\n\n💵 Valor: ${courseInfo.price}\n📚 ${courseInfo.detail}\n\n¿Me confirmás fechas y disponibilidad?`
+  )}`;
 
   // Variantes de animación para cascadas fluidas
   const containerVariants = {
@@ -601,127 +617,18 @@ export default function ImChicLanding() {
                     </div>
                   </div>
 
-                  {/* TEMARIO COMPLETO (Grid limpio de 9 clases + Bonus) */}
-                  <div>
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-[#5A0B22] text-white flex items-center justify-center font-bold text-sm shadow-sm">
-                          <Palette className="w-4 h-4 text-[#D4AF37]" />
-                        </div>
-                        <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#5A0B22]">
-                          Temario Completo: 9 Clases Prácticas + Clase Bonus
-                        </h3>
-                      </div>
-                      <DownloadButton
-                        fileUrl="/documents/Im-Chic-Academy-MK-DIGITAL.pdf"
-                        fileName="Im-Chic-Academy-MK-DIGITAL.pdf"
-                        tooltipText="Descargar Programa Formación MK PDF"
-                        label="Descargar Programa"
-                      />
+                  {/* Descargá el programa completo */}
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4 bg-white/80 p-4 sm:p-5 rounded-2xl border border-[#5A0B22]/10 shadow-sm">
+                    <div>
+                      <p className="font-bold text-sm text-[#5A0B22]">Programa completo de la Formación Integral</p>
+                      <p className="text-xs text-[#5A0B22]/70 mt-0.5">Descargá el temario en PDF y repasá cuando quieras.</p>
                     </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
-
-                      <div className="bg-white/85 p-4 rounded-2xl border border-[#5A0B22]/10 shadow-sm flex items-start gap-3">
-                        <span className="w-7 h-7 rounded-lg bg-[#FFC9D6] text-[#5A0B22] font-bold text-xs flex items-center justify-center flex-shrink-0">1</span>
-                        <div>
-                          <h5 className="font-bold text-sm text-[#5A0B22]">Clase 1</h5>
-                          <p className="text-xs text-[#5A0B22]/80">Presentación y diagnóstico de piel (seca, grasa, mixta, sensible).</p>
-                        </div>
-                      </div>
-
-                      <div className="bg-white/85 p-4 rounded-2xl border border-[#5A0B22]/10 shadow-sm flex items-start gap-3">
-                        <span className="w-7 h-7 rounded-lg bg-[#FFC9D6] text-[#5A0B22] font-bold text-xs flex items-center justify-center flex-shrink-0">2</span>
-                        <div>
-                          <h5 className="font-bold text-sm text-[#5A0B22]">Clase 2</h5>
-                          <p className="text-xs text-[#5A0B22]/80">Limpieza facial profunda y uso de brochas profesionales.</p>
-                        </div>
-                      </div>
-
-                      <div className="bg-white/85 p-4 rounded-2xl border border-[#5A0B22]/10 shadow-sm flex items-start gap-3">
-                        <span className="w-7 h-7 rounded-lg bg-[#FFC9D6] text-[#5A0B22] font-bold text-xs flex items-center justify-center flex-shrink-0">3</span>
-                        <div>
-                          <h5 className="font-bold text-sm text-[#5A0B22]">Clase 3</h5>
-                          <p className="text-xs text-[#5A0B22]/80">Preparación de piel: Corrección, CC Cream y máscara de pestañas.</p>
-                        </div>
-                      </div>
-
-                      <div className="bg-white/85 p-4 rounded-2xl border border-[#5A0B22]/10 shadow-sm flex items-start gap-3">
-                        <span className="w-7 h-7 rounded-lg bg-[#FFC9D6] text-[#5A0B22] font-bold text-xs flex items-center justify-center flex-shrink-0">4</span>
-                        <div>
-                          <h5 className="font-bold text-sm text-[#5A0B22]">Clase 4</h5>
-                          <p className="text-xs text-[#5A0B22]/80">Visagismo de cejas: diseño, definición y armonía facial.</p>
-                        </div>
-                      </div>
-
-                      <div className="bg-white/85 p-4 rounded-2xl border border-[#5A0B22]/10 shadow-sm flex items-start gap-3">
-                        <span className="w-7 h-7 rounded-lg bg-[#FFC9D6] text-[#5A0B22] font-bold text-xs flex items-center justify-center flex-shrink-0">5</span>
-                        <div>
-                          <h5 className="font-bold text-sm text-[#5A0B22]">Clase 5</h5>
-                          <p className="text-xs text-[#5A0B22]/80">Base y contorno: rubor, iluminador y fijación de gloss.</p>
-                        </div>
-                      </div>
-
-                      <div className="bg-white/85 p-4 rounded-2xl border border-[#5A0B22]/10 shadow-sm flex items-start gap-3">
-                        <span className="w-7 h-7 rounded-lg bg-[#FFC9D6] text-[#5A0B22] font-bold text-xs flex items-center justify-center flex-shrink-0">6</span>
-                        <div>
-                          <h5 className="font-bold text-sm text-[#5A0B22]">Clase 6</h5>
-                          <p className="text-xs text-[#5A0B22]/80">Labios: tipos de labial (mate, brilloso, cremoso, gloss) y recomendación.</p>
-                        </div>
-                      </div>
-
-                      <div className="bg-white/85 p-4 rounded-2xl border border-[#5A0B22]/10 shadow-sm flex items-start gap-3">
-                        <span className="w-7 h-7 rounded-lg bg-[#FFC9D6] text-[#5A0B22] font-bold text-xs flex items-center justify-center flex-shrink-0">7</span>
-                        <div>
-                          <h5 className="font-bold text-sm text-[#5A0B22]">Clase 7</h5>
-                          <p className="text-xs text-[#5A0B22]/80">Maquillaje de día: sombras y colores recomendados según tono de piel.</p>
-                        </div>
-                      </div>
-
-                      <div className="bg-white/85 p-4 rounded-2xl border border-[#5A0B22]/10 shadow-sm flex items-start gap-3">
-                        <span className="w-7 h-7 rounded-lg bg-[#FFC9D6] text-[#5A0B22] font-bold text-xs flex items-center justify-center flex-shrink-0">8</span>
-                        <div>
-                          <h5 className="font-bold text-sm text-[#5A0B22]">Clase 8</h5>
-                          <p className="text-xs text-[#5A0B22]/80">Maquillaje de noche: intensificación de mirada y contornos de fiesta.</p>
-                        </div>
-                      </div>
-
-                      <div className="bg-white/85 p-4 rounded-2xl border border-[#5A0B22]/10 shadow-sm flex items-start gap-3">
-                        <span className="w-7 h-7 rounded-lg bg-[#FFC9D6] text-[#5A0B22] font-bold text-xs flex items-center justify-center flex-shrink-0">9</span>
-                        <div>
-                          <h5 className="font-bold text-sm text-[#5A0B22]">Clase 9</h5>
-                          <p className="text-xs text-[#5A0B22]/80">Desmaquillado profesional y rutina regenerativa de noche.</p>
-                        </div>
-                      </div>
-
-                    </div>
-
-                    {/* Tarjeta Destacada Clase Bonus */}
-                    <div className="mt-4 p-4.5 sm:p-5 rounded-2xl bg-white/95 border border-[#D4AF37]/40 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4 text-[#5A0B22]">
-                      <div className="flex items-center gap-3.5 w-full sm:w-auto">
-                        <div className="w-11 h-11 rounded-xl bg-[#FFC9D6] text-[#5A0B22] flex items-center justify-center font-bold flex-shrink-0 shadow-sm border border-[#5A0B22]/10">
-                          <Sparkles className="w-5 h-5 text-[#7A1333]" />
-                        </div>
-                        <div>
-                          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#5A0B22] text-[#F7E7B4] font-bold text-[10px] uppercase tracking-wider mb-1 shadow-sm">
-                            <span>✨ Clase Bonus Especial</span>
-                          </div>
-                          <h5 className="font-serif font-bold text-base text-[#5A0B22]">
-                            Redes Sociales y Marketing
-                          </h5>
-                          <p className="text-xs text-[#5A0B22]/80 mt-0.5">
-                            Estrategias prácticas para vender a través de redes y crear contenido con tu propio maquillaje.
-                          </p>
-                        </div>
-                      </div>
-
-                      <div className="flex-shrink-0 w-full sm:w-auto flex justify-end">
-                        <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-[#FFF0F3] border border-[#FFC9D6] text-[#7A1333] text-xs font-bold shadow-sm whitespace-nowrap">
-                          <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                          <span>100% Incluida</span>
-                        </span>
-                      </div>
-                    </div>
+                    <DownloadButton
+                      fileUrl="/documents/Im-Chic-Academy-MK-DIGITAL.pdf"
+                      fileName="Im-Chic-Academy-MK-DIGITAL.pdf"
+                      tooltipText="Descargar Programa Formación MK PDF"
+                      label="Descargar Programa"
+                    />
                   </div>
 
 
@@ -974,7 +881,7 @@ export default function ImChicLanding() {
               {/* Botón CTA Quiero Inscribirme Ahora con estilo bottone lime */}
               <div className="w-full pt-2 text-center space-y-4 flex flex-col items-center">
                 <LimeButton
-                  href={whatsappUrl}
+                  href={whatsappInscripcionUrl}
                   className="w-full"
                   style={{ width: '100%', display: 'flex' }}
                 >

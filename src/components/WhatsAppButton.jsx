@@ -8,6 +8,7 @@ export const WhatsAppButton = ({
   open = false,
   text = "Whatsapp",
   size = "md", // "sm", "md", "lg"
+  tone = "whatsapp", // "whatsapp" | "brand"
   style = {}
 }) => {
   const encoded = encodeURIComponent(message);
@@ -20,7 +21,7 @@ export const WhatsAppButton = ({
   );
 
   return (
-    <div className={`wsp-button-container ${fixed ? 'wsp-fixed' : ''} ${className}`} style={style}>
+    <div className={`wsp-button-container ${fixed ? 'wsp-fixed' : ''} ${tone === 'brand' ? 'wsp-tone-brand' : ''} ${className}`} style={style}>
       <style>{`
         .wsp-button-container.wsp-fixed {
           position: fixed;
@@ -196,6 +197,27 @@ export const WhatsAppButton = ({
           transform: translate(2px, 2px);
           box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
         }
+
+        /* ── Variante de marca (tone="brand"): paleta rosa/vino ── */
+        .wsp-tone-brand .wsp-btn-open {
+          background-color: #FFF0F3;
+          color: #5A0B22;
+          border: 1px solid rgba(90, 11, 34, 0.18);
+          box-shadow: 0 2px 8px rgba(90, 11, 34, 0.12);
+        }
+        .wsp-tone-brand .wsp-btn-open .text { color: #5A0B22; }
+        .wsp-tone-brand .wsp-btn-open .sign svg path { fill: #7A1333; }
+        .wsp-tone-brand .wsp-btn-open:hover {
+          background-color: #FFC9D6;
+          box-shadow: 0 6px 18px rgba(90, 11, 34, 0.25);
+        }
+        .wsp-tone-brand .wsp-btn-open:active {
+          box-shadow: 1px 1px 5px rgba(90, 11, 34, 0.2);
+        }
+
+        /* Variante compacta (contenedor fijo) */
+        .wsp-tone-brand .wsp-styled-button { background-color: #5A0B22; }
+        .wsp-tone-brand .wsp-styled-button:hover { box-shadow: 0 6px 20px rgba(90, 11, 34, 0.4); }
       `}</style>
       
       {open ? (

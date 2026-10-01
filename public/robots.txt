@@ -1,0 +1,5 @@
+# I'm Chic by Mel — robots.txt
+User-agent: *
+Allow: /
+
+Sitemap: https://im-chic-by-mel-web.pages.dev/sitemap.xml
