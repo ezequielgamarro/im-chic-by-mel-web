@@ -1,12 +1,11 @@
 import Navbar from "./src/components/Navbar";
-import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Scissors, Palette, Menu, X, ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import WhatsAppButton from './src/components/WhatsAppButton';
-import SparkleButton from './src/components/SparkleButton';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { Sparkles, Scissors, Palette, Calendar } from 'lucide-react';
 import InstagramButton from './src/components/InstagramButton';
-import TurnoModal from './src/components/TurnoModal';
+import WhatsAppButton from './src/components/WhatsAppButton';
+import ServiceCarousel from './src/components/ServiceCarousel';
+import { useTurno } from './src/context/TurnoContext';
 
 const services = [
   {
@@ -14,6 +13,7 @@ const services = [
     title: 'Uñas que realzan tu estilo',
     subtitle: 'Nail Art & Spa',
     description: 'Realzá la belleza de tus manos con acabados impecables y duraderos. Semipermanente, capping y Soft Gel, adaptados a tu estilo y pensados para lucir uñas cuidadas, elegantes y sofisticadas.',
+    modalService: 'Uñas',
     icon: Sparkles,
     accentColor: 'from-[#FFB6C1] to-[#FF69B4]',
     images: [
@@ -35,6 +35,7 @@ const services = [
     title: 'Transformá tu cabello',
     subtitle: 'Hair Studio',
     description: 'Tratamientos personalizados para nutrir, reparar y revitalizar tu cabello, devolviéndole suavidad, brillo y movimiento para que luzca saludable y radiante.',
+    modalService: 'Cabello',
     icon: Scissors,
     accentColor: 'from-[#E2A7B8] to-[#D87F95]',
     images: [
@@ -48,6 +49,7 @@ const services = [
     title: 'Tu belleza, elevada a otro nivel',
     subtitle: 'MakeUp & Beauty',
     description: 'Maquillaje profesional diseñado para realzar tus facciones y potenciar tu belleza, con un acabado elegante y personalizado para cada ocasión especial.',
+    modalService: 'Maquillaje',
     icon: Palette,
     accentColor: 'from-[#D4AF37] to-[#F3E5AB]',
     images: [
@@ -63,108 +65,8 @@ const services = [
   }
 ];
 
-function ServiceCarousel({ service }) {
-  const { images, title, subtitle, icon: Icon, accentColor } = service;
-  const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const current = images[index];
-
-  useEffect(() => {
-    if (paused || images.length <= 1) return;
-    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReduced) return;
-    const id = window.setInterval(() => {
-      setIndex((i) => (i + 1) % images.length);
-    }, 4000);
-    return () => window.clearInterval(id);
-  }, [paused, images.length]);
-
-  const goTo = (next) => {
-    setIndex((next + images.length) % images.length);
-  };
-
-  return (
-    <div
-      className="relative aspect-[4/5] w-full rounded-2xl overflow-hidden border border-[#D87F95]/30 bg-gradient-to-br from-[#FFF0F3] to-[#FFC9D6]/40 shadow-xl group-hover:border-[#D87F95]/60 transition-all duration-500"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocusCapture={() => setPaused(true)}
-      onBlurCapture={() => setPaused(false)}
-      role="region"
-      aria-roledescription="carrusel"
-      aria-label={`Trabajos de ${subtitle}`}
-    >
-      <AnimatePresence mode="wait">
-        <motion.img
-          key={current.src}
-          src={current.src}
-          alt={current.alt}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.45 }}
-          className="absolute inset-0 w-full h-full object-cover"
-          loading="lazy"
-        />
-      </AnimatePresence>
-
-      <div className="absolute inset-0 bg-gradient-to-t from-[#5A0B22]/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6 pointer-events-none">
-        <div className="text-white">
-          <span className="text-xs uppercase font-bold tracking-widest text-[#FFC9D6]">{subtitle}</span>
-          <h4 className="text-xl font-serif font-bold">{title}</h4>
-        </div>
-      </div>
-
-      <div className={`absolute top-4 left-4 w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-br ${accentColor} text-white shadow-md backdrop-blur-sm z-10`}>
-        <Icon size={20} />
-      </div>
-
-      {images.length > 1 && (
-        <>
-          <button
-            type="button"
-            aria-label="Imagen anterior"
-            onClick={() => goTo(index - 1)}
-            className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/80 text-[#5A0B22] flex items-center justify-center shadow-md hover:bg-white transition-colors"
-          >
-            <ChevronLeft size={20} />
-          </button>
-          <button
-            type="button"
-            aria-label="Imagen siguiente"
-            onClick={() => goTo(index + 1)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-white/80 text-[#5A0B22] flex items-center justify-center shadow-md hover:bg-white transition-colors"
-          >
-            <ChevronRight size={20} />
-          </button>
-          <div className="absolute bottom-4 left-0 right-0 z-10 flex justify-center gap-1.5 px-4">
-            {images.map((image, i) => (
-              <button
-                key={image.src}
-                type="button"
-                aria-label={`Ver imagen ${i + 1} de ${images.length}`}
-                aria-current={i === index ? true : undefined}
-                onClick={() => setIndex(i)}
-                className={`h-1.5 rounded-full transition-all duration-300 ${i === index ? 'w-6 bg-white' : 'w-1.5 bg-white/50 hover:bg-white/80'}`}
-              />
-            ))}
-          </div>
-        </>
-      )}
-    </div>
-  );
-}
-
 export default function HomeServices() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isTurnoOpen, setIsTurnoOpen] = useState(false);
-  const [selectedService, setSelectedService] = useState('');
-  const whatsappNumber = "5493813553492";
-
-  const handleOpenTurno = (serviceName = '') => {
-    setSelectedService(serviceName);
-    setIsTurnoOpen(true);
-  };
+  const { open: openTurno } = useTurno();
 
   return (
     <div className="min-h-screen bg-[#FFF0F3] text-[#5A0B22] font-sans selection:bg-[#5A0B22] selection:text-white overflow-x-hidden relative">
@@ -172,6 +74,7 @@ export default function HomeServices() {
       <Navbar />
 
       <main className="relative z-10 pt-10 pb-20">
+        {/* HERO */}
         <section className="flex flex-col items-center justify-center py-8 px-4">
           <div className="max-w-5xl mx-auto text-center">
             <motion.div
@@ -185,7 +88,7 @@ export default function HomeServices() {
               </span>
             </motion.div>
 
-            <motion.h2
+            <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.3 }}
@@ -193,7 +96,7 @@ export default function HomeServices() {
             >
               <span className="block">Realzá tu belleza</span>
               <span className="block italic text-transparent bg-clip-text bg-gradient-to-r from-[#D87F95] via-[#C56B82] to-[#D87F95]">Potenciá tu esencia</span>
-            </motion.h2>
+            </motion.h1>
 
             <motion.p
               initial={{ opacity: 0 }}
@@ -212,11 +115,11 @@ export default function HomeServices() {
             >
               <button
                 type="button"
-                onClick={() => handleOpenTurno()}
+                onClick={() => openTurno()}
                 className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-gradient-to-r from-[#5A0B22] via-[#7A1333] to-[#5A0B22] text-white font-semibold text-sm sm:text-base tracking-wide shadow-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all cursor-pointer group"
               >
                 <Calendar className="w-4 h-4 text-[#F7E7B4] group-hover:rotate-12 transition-transform" />
-                <span>Generar Turno Online</span>
+                <span>Agenda tu turno</span>
               </button>
             </motion.div>
           </div>
@@ -250,7 +153,7 @@ export default function HomeServices() {
                   >
                     <div className="flex items-center space-x-4 mb-3 sm:mb-4">
                       <span className="h-[1px] w-12 bg-gradient-to-r from-[#D87F95] to-transparent"></span>
-                      <span className="text-xs sm:text-sm font-bold tracking-[0.2em] uppercase text-[#D87F95]">{service.subtitle}</span>
+                      <span className="text-xs sm:text-sm font-bold tracking-[0.2em] uppercase text-[#A64D66]">{service.subtitle}</span>
                     </div>
 
                     <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif text-gray-900 mb-4 sm:mb-6 leading-tight">
@@ -264,11 +167,11 @@ export default function HomeServices() {
                     <div className="mt-6 sm:mt-8">
                       <button
                         type="button"
-                        onClick={() => handleOpenTurno(service.title)}
+                        onClick={() => openTurno(service.modalService)}
                         className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-gradient-to-r from-[#5A0B22] via-[#7A1333] to-[#5A0B22] text-white font-medium text-sm sm:text-base tracking-wide shadow-md hover:shadow-xl hover:scale-105 active:scale-95 transition-all cursor-pointer group"
                       >
                         <Calendar className="w-4 h-4 text-[#F7E7B4] group-hover:rotate-12 transition-transform" />
-                        <span>Generar Turno</span>
+                        <span>Agenda tu turno</span>
                       </button>
                     </div>
                   </motion.div>
@@ -281,19 +184,15 @@ export default function HomeServices() {
       </main>
 
       {/* FOOTER */}
-      <footer className="py-8 bg-white border-t border-[#5A0B22]/10 text-center text-sm text-[#5A0B22]/60">
+      <footer className="py-8 bg-white border-t border-[#5A0B22]/10 text-center text-sm text-[#5A0B22]/75">
         <div className="flex flex-col items-center justify-center gap-4">
-          <InstagramButton />
+          <div className="flex items-center justify-center gap-3">
+            <WhatsAppButton open={false} text="WhatsApp" />
+            <InstagramButton />
+          </div>
           <p>© 2026 I'm Chic By Melany Toledo - Consultora de Belleza Independiente Mary Kay.</p>
         </div>
       </footer>
-
-      {/* Modal para Generar Turno con Google Calendar y WhatsApp */}
-      <TurnoModal
-        isOpen={isTurnoOpen}
-        onClose={() => setIsTurnoOpen(false)}
-        initialService={selectedService}
-      />
     </div>
   );
 }

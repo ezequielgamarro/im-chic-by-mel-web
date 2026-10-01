@@ -12,12 +12,7 @@ const SERVICE_OPTIONS = [
   'Cabello: Peinado Social & Styling',
   'Maquillaje: MakeUp Social Glam',
   'Maquillaje: MakeUp Noche Piel Blindada',
-  'Maquillaje: Novias & Quinceañeras HD',
-  'Pack: Look Total (MakeUp + Peinado)',
-  'Pack: Belleza Completa (Uñas + Pelo + MakeUp)',
-  'Experiencia Novia VIP Integral',
-  'Cursos: Masterclass Automaquillaje',
-  'Asesoría: Cuidado Facial Mary Kay'
+  'Maquillaje: Novias & Quinceañeras HD'
 ];
 
 const TIME_SLOTS = [
@@ -246,7 +241,7 @@ export default function TurnoModal({ isOpen, onClose, initialService = '' }) {
                   <span>Reserva Online Inmediata</span>
                 </div>
                 <h3 className="font-serif text-2xl sm:text-3xl font-bold text-[#5A0B22]">
-                  Generar Turno
+                  Agenda tu turno
                 </h3>
                 <p className="text-xs sm:text-sm text-[#5A0B22]/70 mt-1 max-w-sm mx-auto">
                   Agendá tu cita. Se enviará a WhatsApp y se guardará automáticamente en tu Google Calendar.

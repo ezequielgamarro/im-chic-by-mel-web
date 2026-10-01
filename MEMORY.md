@@ -1,21 +1,26 @@
-# MEMORY.md
-Memoria del proyecto entre sesiones. Límite estricto: ~50 líneas. Resumir o eliminar datos obsoletos.
-
-## Estado actual
-- Web React + Vite ("I'm Chic By Melany Toledo") operativa con rutas principales: Inicio (/), Cursos (/cursos), Tienda (/tienda), Servicios (/servicios, con alias retrocompatible /inversion) y Contacto (/contacto).
-- Pestaña "Inversión" renombrada a "Servicios" en todas las barras de navegación desktop y móvil.
-- Catálogo interactivo de servicios detallado por categorías (Uñas, Cabello, MakeUp, Packs VIP, Cursos) con búsqueda reactiva, descripción exhaustiva, duración, qué incluye y reserva directa.
-- Sistema de reserva integrado con TurnoModal.jsx, Google Calendar (.ics) y WhatsApp (+54 9 381 355-3492).
-
-## Decisiones (y por qué)
-- Unificación de navegación hacia `/servicios`: preserva coherencia estética y comercial del estudio.
-- Catálogo con filtros y búsqueda: permite a las usuarias explorar fácilmente Uñas, Cabello, MakeUp y Combos VIP.
-- Acciones dobles por tarjeta ("Generar Turno" y "Consultar por WhatsApp"): maximiza la conversión de reservas.
-- Ampliación de SERVICE_OPTIONS en TurnoModal.jsx para sincronizar con los servicios del catálogo nuevo.
-
-## Aprendizajes y errores a evitar
-- Mantener `/inversion` como ruta secundaria en src/main.jsx previene enlaces rotos de visitas previas.
-- Preseleccionar el servicio en TurnoModal según el botón presionado acelera el flujo de agendamiento.
+﻿## Estado actual
+SDD activo: AGENTS.md, docs/constitution.md (5 principios), specs/ y MEMORY.md. MCP Chrome DevTools + skill "frontend-design".
+Dominio canónico: https://im-chic-by-mel-web.pages.dev/
+Home (/) = HomeServices.jsx con su diseño alternado original + arreglos (ErrorBoundary, H1, 44px, contraste).
+Pestaña Servicios (/servicios, /inversion) = InversionPage.jsx con 3 categorías + botón "Agendar turno" c/u.
+Specs 001–006 implementadas: 001 global/accesibilidad, 002 Navbar + TurnoModal centralizado, 003 buscador tienda, 004 heading-order tienda, 005 SEO/agentic, 006 inscripción por WhatsApp en /cursos + limpieza del selector de turnos.
+/cursos: botón "Quiero Inscribirme Ahora" abre WhatsApp con curso + valor (Masterclass $65.000 / Formación Integral $130.000 por mes) y detalles.
+TurnoModal: selector "Servicio a Realizar" con 10 opciones (solo Uñas, Cabello, Maquillaje; sin Packs, Cursos ni Asesoría).
+Navbar: solo CTA "Agenda tu turno". Footer: WhatsApp + Instagram en 5 rutas, solo ícono y nombre al hover.
+/servicios: botón "Pedir Presupuesto WhatsApp" en size md (48px) y paleta de marca.
+SEO: public/robots.txt, public/sitemap.xml y public/llms.txt creados y servidos como text/plain / text/xml.
+Validado: build OK; Lighthouse móvil 100/100/100/100 (Accessibility, Best Practices, SEO, Agentic) en /; Accessibility 100 en /servicios y /tienda; sin errores de consola.
 
 ## Próximos pasos
-- Posible pasarela de señas/pagos online (Mercado Pago) si se requiere confirmar turnos con anticipo.
+Sin pendientes críticos. Ideas: títulos/descripciones por ruta, robots/llms por entorno, migración de Tailwind CDN a build.
+
+## Decisiones arquitectónicas
+- SDD obligatorio: leer docs/constitution.md y documentar spec + plan antes de tocar .jsx.
+- El home (/) NO se rediseña; mantiene su layout alternado original.
+- La pestaña Servicios vive en InversionPage.jsx (3 categorías exactas).
+- TurnoModal único y global vía TurnoProvider/useTurno (src/context/TurnoContext.jsx).
+- WhatsAppButton: tone ("whatsapp" verde por defecto | "brand" marca); open={false} = solo ícono + nombre al hover (igual que InstagramButton).
+- WhatsApp/Instagram viven en el footer, no en el Navbar. ServiceCarousel centraliza el carrusel accesible.
+- Archivos SEO estáticos en public/ (robots.txt, sitemap.xml, llms.txt); dominio canónico pages.dev.
+- Componentes protegidos: Navbar y TurnoModal (no modificar sin spec). ErrorBoundary envuelve el árbol de rutas.
+- MCP usa el esquema V2 de OpenCode (mcp.servers, type: local, command como array único).

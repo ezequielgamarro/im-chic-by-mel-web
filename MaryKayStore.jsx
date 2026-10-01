@@ -1,4 +1,4 @@
-import Navbar from "./src/components/Navbar";
+﻿import Navbar from "./src/components/Navbar";
 import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -21,6 +21,7 @@ import {
   Gift,
   ShoppingCart,
   Trash2,
+  Search,
   Plus,
   Minus
 } from 'lucide-react';
@@ -37,6 +38,17 @@ import imgMascarillaCarbon from './src/assets/img/Productos/10094148.jpg';
 import imgSatinLips from './src/assets/img/Productos/10094714 Satin Lips Lip Balm.jpg';
 import imgPolvoTraslucido from './src/assets/img/Productos/168609-002-TranslucentLoosePowder-NOBRUSH-Hi-Res.jpg';
 import imgCheekDuos from './src/assets/img/Productos/J2001928-UNL-LA-586-AT-PLAY-CHEEK-DUOS-2-SOLDIER-CLOSED-DESERT-SUN-BRONZER-HiRes.jpg';
+// Nuevas imágenes agregadas
+import imgTwRepairPeel from './src/assets/img/Productos/10088897.jpg';
+import imgSombraDuoPlum from './src/assets/img/Productos/2d0de4b3be451cc9bb4bf36a4e6456f5.jpg';
+import imgEsponjaBlending from './src/assets/img/Productos/799909-UNL-GB-310-QSM-04-19-Brush-BlendingSponge-Hi-Res.jpg';
+import imgSatinLipsScrub from './src/assets/img/Productos/GM_300283_SatinLips_SugarScrub.jpg';
+import imgTwNightRecovery from './src/assets/img/Productos/J2008051-UNL-GB-014-TW-Nighttime-Recovery-HiRes.jpg';
+import imgClearBrowGel from './src/assets/img/Productos/J2009225-UNL-GB-102-MaryKay-Clear-Brow-Gel-HiRes.jpg';
+import imgSombraDuoPinkChampagne from './src/assets/img/Productos/f3abfa5c58d3abd4f876731ed443a5c9.jpg';
+import imgSombraMoonstone from './src/assets/img/Productos/ac59f7a943fc459f05563057e90ecedd.jpg';
+import imgSombraSmokeyQuartz from './src/assets/img/Productos/ba7be96122c1306ce863b974828982dd.jpg';
+import imgProtectorSolarMineral30 from './src/assets/img/Productos/bae5ab5cc46d47e4f913516f821e948b.jpg';
 import imgPerfilMaryKay from './src/assets/img/perfil mary kay2.png';
 
 /**
@@ -156,6 +168,106 @@ const products = [
     badge: "",
     price: 28200,
   },
+  {
+    id: 9,
+    name: "TimeWise Repair\u00ae Peeling Facial Revealing Radiance",
+    category: "Cuidado de la Piel",
+    description: "Peeling suave de uso semanal que renueva la superficie de la piel, borra el da\u00f1o acumulado y revela un rostro notablemente m\u00e1s luminoso, uniforme y juvenil desde la primera aplicaci\u00f3n.",
+    image: imgTwRepairPeel,
+    icon: Sparkles,
+    badge: "Renovaci\u00f3n Celular",
+    price: 84200,
+  },
+  {
+    id: 10,
+    name: "Crema de Recuperaci\u00f3n Nocturna TimeWise\u00ae",
+    category: "Cuidado de la Piel",
+    description: "F\u00f3rmula de noche con microcápsulas activas que trabajan mientras dorm\u00eds: hidrata en profundidad, combate las finas l\u00edneas y restaura el aspecto descansado y radiante de tu piel al despertar.",
+    image: imgTwNightRecovery,
+    icon: Droplets,
+    badge: "Acci\u00f3n Nocturna",
+    price: 61900,
+  },
+  {
+    id: 11,
+    name: "Protector Solar Mineral FPS 30 Amplio Espectro",
+    category: "Cuidado de la Piel",
+    description: "F\u00f3rmula mineral liviana con FPS 30 de amplio espectro. Ideal para uso diario, no deja residuo blanco y es apta para pieles sensibles.",
+    image: imgProtectorSolarMineral30,
+    icon: ShieldCheck,
+    badge: "Mineral & Suave",
+    price: 51500,
+  },
+  {
+    id: 12,
+    name: "Exfoliante Labial Satin Lips\u00ae Shea Sugar Scrub",
+    category: "Labios",
+    description: "Exfoliante para labios con karit\u00e9 que elimina células muertas, suaviza y afina los labios en minutos. Aroma a t\u00e9 blanco y c\u00edtricos.",
+    image: imgSatinLipsScrub,
+    icon: Smile,
+    badge: "",
+    price: 19800,
+  },
+  {
+    id: 13,
+    name: "Gel Transparente para Cejas Clear Brow\u00ae Mary Kay",
+    category: "Maquillaje",
+    description: "Fija y define tus cejas durante todo el d\u00eda con un acabado natural y limpio. De larga duraci\u00f3n, no se siente n\u00ed r\u00edgido ni pegajoso. Transparente, apto para cualquier tono de cabello.",
+    image: imgClearBrowGel,
+    icon: Eye,
+    badge: "",
+    price: 21000,
+  },
+  {
+    id: 14,
+    name: "Sombra D\u00fao Mary Kay At Play\u00ae - Plum and Papaya",
+    category: "Maquillaje",
+    description: "D\u00fao de sombras de ojos con pigmentaci\u00f3n intensa y acabado satinado. El tono Papaya c\u00e1lido y el Plum profundo para crear looks del d\u00eda a la noche.",
+    image: imgSombraDuoPlum,
+    icon: Palette,
+    badge: "Tendencia",
+    price: 17200,
+  },
+  {
+    id: 15,
+    name: "Sombra D\u00fao Mary Kay At Play\u00ae - Pink Champagne",
+    category: "Maquillaje",
+    description: "D\u00fao de sombras luminosas con acabado brillante. Tonos champagne dorado y rosa polvo para un look radiante e iluminado. Larga duraci\u00f3n y alta pigmentaci\u00f3n.",
+    image: imgSombraDuoPinkChampagne,
+    icon: Palette,
+    badge: "",
+    price: 17200,
+  },
+  {
+    id: 16,
+    name: "Sombra Individual Mary Kay\u00ae - Moonstone",
+    category: "Maquillaje",
+    description: "Sombra de acabado luminoso en tono Moonstone dorado rosado. Polvo ultrafino de alta adherencia, perfecta para iluminar el arco de las cejas o el lagrimal.",
+    image: imgSombraMoonstone,
+    icon: Palette,
+    badge: "",
+    price: 13500,
+  },
+  {
+    id: 17,
+    name: "Sombra Individual Mary Kay\u00ae - Smokey Quartz",
+    category: "Maquillaje",
+    description: "Sombra en tono tostado neutro con acabado luminoso. Vers\u00e1til y apta para todo tipo de ojos, ideal para el crease o como transici\u00f3n. Se difumina con facilidad.",
+    image: imgSombraSmokeyQuartz,
+    icon: Palette,
+    badge: "",
+    price: 13500,
+  },
+  {
+    id: 18,
+    name: "Esponja Blending Mary Kay\u00ae",
+    category: "Accesorios",
+    description: "Esponja profesional para difuminar bases, correctores y polvos con acabado impecable. Su forma en punta alcanza el contorno de la nariz y el rabillo del ojo.",
+    image: imgEsponjaBlending,
+    icon: Camera,
+    badge: "",
+    price: 15200,
+  },
 ];
 
 // Helper de formato de moneda
@@ -207,9 +319,9 @@ function ProductCard({ product, addToCart, formatPrice }) {
             </span>
           </div>
 
-          <h4 className="font-serif text-xl font-bold text-[#5A0B22] leading-tight mb-2">
+          <h3 className="font-serif text-xl font-bold text-[#5A0B22] leading-tight mb-2">
             {product.name}
-          </h4>
+          </h3>
 
           <div className="mb-4">
             <p className={`text-sm text-[#5A0B22]/75 leading-relaxed transition-all duration-200 ${isExpanded ? '' : 'line-clamp-2'}`}>
@@ -251,6 +363,7 @@ function ProductCard({ product, addToCart, formatPrice }) {
 export default function MaryKayStore() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState('Todos');
+  const [searchQuery, setSearchQuery] = useState('');
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
@@ -329,9 +442,18 @@ export default function MaryKayStore() {
     return ['Todos', ...Array.from(new Set(products.map((p) => p.category)))];
   }, []);
 
-  const filteredProducts = activeCategory === 'Todos'
-    ? products
-    : products.filter(p => p.category === activeCategory);
+  const filteredProducts = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+    return products.filter((product) => {
+      const matchesCategory = activeCategory === 'Todos' || product.category === activeCategory;
+      const matchesSearch =
+        query === '' ||
+        product.name.toLowerCase().includes(query) ||
+        product.description.toLowerCase().includes(query) ||
+        product.category.toLowerCase().includes(query);
+      return matchesCategory && matchesSearch;
+    });
+  }, [activeCategory, searchQuery]);
 
   return (
     <div className="min-h-screen bg-[#FFF0F3] text-[#5A0B22] font-sans selection:bg-[#5A0B22] selection:text-white relative overflow-x-hidden">
@@ -534,9 +656,9 @@ export default function MaryKayStore() {
                     placeholderLabel="Consultora de Belleza"
                   />
                   <div className="absolute bottom-4 left-4 right-4 sm:bottom-6 sm:left-6 sm:right-6 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-white/90 backdrop-blur-md shadow-lg">
-                    <h3 className="font-serif font-bold text-[#5A0B22] text-base sm:text-lg leading-tight mb-0.5 sm:mb-1">
+                    <p className="font-serif font-bold text-[#5A0B22] text-base sm:text-lg leading-tight mb-0.5 sm:mb-1">
                       Consultora de Belleza
-                    </h3>
+                    </p>
                     <p className="text-xs text-[#7A1333] font-semibold">Melany Toledo</p>
                   </div>
                 </div>
@@ -557,6 +679,31 @@ export default function MaryKayStore() {
               <p className="text-[#5A0B22]/70 font-medium">
                 Agregá tus favoritos al carrito y envíanos tu pedido por WhatsApp de forma rápida y sencilla.
               </p>
+            </div>
+
+            {/* Buscador de Productos */}
+            <div className="max-w-xl mx-auto mb-6">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#7A1333]" aria-hidden="true" />
+                <input
+                  type="search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Buscar producto (ej: labial, TimeWise)..."
+                  aria-label="Buscar productos"
+                  className="w-full min-h-[44px] pl-12 pr-14 py-3.5 rounded-full bg-[#FFF0F3] border border-[#FFC9D6] text-sm text-[#5A0B22] placeholder:text-[#5A0B22]/50 focus:outline-none focus:ring-2 focus:ring-[#5A0B22]/20 transition-all"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery('')}
+                    aria-label="Limpiar búsqueda"
+                    className="absolute right-1.5 top-1/2 -translate-y-1/2 w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full text-[#5A0B22]/60 hover:text-[#5A0B22] hover:bg-[#FFC9D6]/50 transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
             </div>
 
             {/* Filtros de Categoría */}
@@ -587,6 +734,13 @@ export default function MaryKayStore() {
                   />
                 ))}
               </AnimatePresence>
+              {filteredProducts.length === 0 && (
+                <div className="col-span-full text-center py-16">
+                  <Search className="w-10 h-10 text-[#D87F95] mx-auto mb-3" aria-hidden="true" />
+                  <p className="font-serif text-xl font-bold text-[#5A0B22] mb-1">No encontramos productos</p>
+                  <p className="text-sm text-[#5A0B22]/70">Probá con otra palabra o cambiá de categoría.</p>
+                </div>
+              )}
             </motion.div>
 
             {/* CTA Final Tienda */}
@@ -637,9 +791,12 @@ export default function MaryKayStore() {
       </main>
 
       {/* FOOTER */}
-      <footer className="py-8 bg-white border-t border-[#5A0B22]/10 text-center text-sm text-[#5A0B22]/60">
+      <footer className="py-8 bg-white border-t border-[#5A0B22]/10 text-center text-sm text-[#5A0B22]/75">
         <div className="flex flex-col items-center justify-center gap-4">
-          <InstagramButton />
+          <div className="flex items-center justify-center gap-3">
+            <WhatsAppButton open={false} text="WhatsApp" />
+            <InstagramButton />
+          </div>
           <p>© 2026 I'm Chic By Melany Toledo - Consultora de Belleza Independiente Mary Kay.</p>
         </div>
       </footer>
