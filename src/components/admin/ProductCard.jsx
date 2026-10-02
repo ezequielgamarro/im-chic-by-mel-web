@@ -30,6 +30,12 @@ export default function ProductCard({ product, onStockChange, onEdit, onDelete, 
       </div>
 
       <div className="p-4 flex flex-col gap-2 flex-1">
+        {product.category ? (
+          <span className="self-start inline-flex items-center px-2.5 py-1 rounded-full bg-[#FFC9D6]/50 text-[#7A1333] text-xs font-semibold tracking-wide">
+            {product.category}
+          </span>
+        ) : null}
+
         <h3 className="font-serif text-base sm:text-lg font-semibold leading-snug">
           {product.title}
         </h3>

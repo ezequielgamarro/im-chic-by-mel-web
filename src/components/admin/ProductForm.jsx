@@ -9,6 +9,16 @@ const ALLOWED_MIME = {
   'image/webp': 'webp',
 };
 
+// Categorías existentes del catálogo (spec 007, T14 / RF-6).
+const CATEGORIES = [
+  'Cuidado de la Piel',
+  'Maquillaje',
+  'Labios',
+  'Accesorios',
+  'Productos',
+];
+const DEFAULT_CATEGORY = 'Productos';
+
 /**
  * Genera un slug seguro a partir del título (sin acentos, minúsculas, guiones).
  */
@@ -50,6 +60,11 @@ export default function ProductForm({ onCreated, onUpdated, onCancel, product = 
       : ''
   );
   const [description, setDescription] = useState(product?.description ?? '');
+  const [category, setCategory] = useState(
+    product?.category && CATEGORIES.includes(product.category)
+      ? product.category
+      : DEFAULT_CATEGORY
+  );
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState('');
   const [errors, setErrors] = useState({});
@@ -134,6 +149,7 @@ export default function ProductForm({ onCreated, onUpdated, onCancel, product = 
           title: title.trim(),
           price: Number(price),
           description: description.trim(),
+          category,
         };
         if (file) payload.image_url = imageUrl;
 
@@ -164,6 +180,7 @@ export default function ProductForm({ onCreated, onUpdated, onCancel, product = 
           title: title.trim(),
           price: Number(price),
           description: description.trim(),
+          category,
           image_url: imageUrl,
           stock: 0,
         });
@@ -178,6 +195,7 @@ export default function ProductForm({ onCreated, onUpdated, onCancel, product = 
         setTitle('');
         setPrice('');
         setDescription('');
+        setCategory(DEFAULT_CATEGORY);
         setFile(null);
         setPreviewUrl('');
         if (fileInputRef.current) fileInputRef.current.value = '';
@@ -197,7 +215,7 @@ export default function ProductForm({ onCreated, onUpdated, onCancel, product = 
       <div className="flex items-center gap-2 mb-4">
         <ImagePlus size={20} className="text-[#7A1333]" aria-hidden="true" />
         <h2 className="font-serif text-lg sm:text-xl font-semibold">
-          {isEdit ? 'Editar producto' : 'Nuevo producto'}
+          {isEdit ? 'Editar producto' : 'Crear producto'}
         </h2>
       </div>
 
@@ -341,6 +359,29 @@ export default function ProductForm({ onCreated, onUpdated, onCancel, product = 
               {errors.description}
             </p>
           ) : null}
+        </div>
+
+        {/* Categoría */}
+        <div className="flex flex-col gap-1.5">
+          <label
+            htmlFor="category"
+            className="text-sm font-semibold text-[#5A0B22]"
+          >
+            Categoría
+          </label>
+          <select
+            id="category"
+            name="category"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-full min-h-[44px] px-4 rounded-xl border border-[#5A0B22]/20 bg-white text-[#5A0B22] focus:outline-none focus:ring-2 focus:ring-[#7A1333] focus:border-[#7A1333] transition"
+          >
+            {CATEGORIES.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
         </div>
 
         {submitError ? (

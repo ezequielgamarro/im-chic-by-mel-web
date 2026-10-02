@@ -83,3 +83,15 @@
 - **Archivos/áreas:** `src/pages/AdminPage.jsx`, posible `src/components/admin/ProductList.jsx` (botón Eliminar).
 - **Aceptación:** botón "Eliminar" por producto con confirmación antes de ejecutar; al confirmar, se borra la fila en la tabla `products` y, si aplica, la imagen correspondiente en Storage; el producto desaparece de la lista del panel y de `/tienda`; `npm run build` OK y sin errores de consola.
 - **No romper:** no afectar el control de stock ni la subida de productos; re-verificar regresión de T11 al cierre.
+
+## T14 — Selector de categoría en crear y editar
+- **Objetivo:** que el administrador pueda elegir la categoría del producto y se persista en Supabase.
+- **Archivos/áreas:** `src/components/admin/ProductForm.jsx` (select de categorías en modo crear y modo edición, precarga en edición), `src/pages/AdminPage.jsx` (INSERT/UPDATE incluyendo `category`).
+- **Aceptación:** ProductForm muestra un `<select>` con las categorías existentes del catálogo en crear y en editar; en edición viene precargada la categoría actual; al guardar, el `INSERT`/`UPDATE` incluye `category` y la columna `category` de Supabase queda actualizada; la lista del panel y `/tienda` reflejan la categoría.
+- **No romper:** no alterar validaciones de T8/T12 ni estilos existentes; re-verificar regresión de T11 al cierre.
+
+## T15 — Rediseño de la página /admin
+- **Objetivo:** hacer `/admin` más armónica, intuitiva y extendible usando la skill `frontend-design`, manteniendo todas las funcionalidades.
+- **Archivos/áreas:** `src/pages/AdminPage.jsx`, posibles componentes en `src/components/admin/` (ProductList, ProductCard, ProductForm, StockControls) según la skill.
+- **Aceptación:** diseño mobile-first, marca (paleta y tipografía), WCAG 2.1 AA, secciones claras; siguen funcionando crear (T8), editar (T12), eliminar (T13), stock +/− (T9) y selector de categoría (T14); `npm run build` OK y sin errores de consola.
+- **No romper:** no tocar Navbar, TurnoModal ni páginas públicas; verificar regresión de T11 al cierre.

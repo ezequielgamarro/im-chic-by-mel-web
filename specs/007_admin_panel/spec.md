@@ -93,6 +93,24 @@ de la tabla products y, si corresponde, su imagen en Storage.
   Storage.
 - El producto desaparece de la lista del panel y de `/tienda` tras la operación.
 
+### RF-6 — Categoría seleccionable (EARS: CUANDO ... ENTONCES ...)
+
+CUANDO el administrador cree o edite un producto, EL SISTEMA le permitirá elegir la
+categoría y la guardará en la columna `category` de Supabase.
+
+- Selector (`<select>`) con las categorías existentes del catálogo, tanto en el formulario
+  de alta (ProductForm) como en el de edición.
+- El `INSERT` y el `UPDATE` incluyen el campo `category`.
+- La categoría queda persistida en la columna `category` de la tabla `products`.
+
+### Nota de diseño — Rediseño de `/admin`
+
+La página `/admin` se rediseña para ser más **armónica, intuitiva y extendible**:
+mobile-first, clases utilitarias de Tailwind CDN, paleta y tipografía de marca,
+accesible (WCAG 2.1 AA) y con secciones claras. Debe aplicar la skill
+**`frontend-design`**. Se conservan sin cambios funcionales: crear (T8), editar (T12),
+eliminar (T13) y control de stock (T9).
+
 ## 3. Restricciones / Constitución
 
 1. **Mobile-First:** el panel se usa probablemente desde el celular; todos los controles
@@ -115,6 +133,10 @@ de la tabla products y, si corresponde, su imagen en Storage.
       el stock no puede ser negativo y el botón `−` está deshabilitado en stock 0.
 - [ ] CA-5: `npm run build` OK y sin errores de consola.
 - [ ] CA-6: Interfaz usable en móvil (mobile-first) y consistente con la marca.
+- [ ] CA-7: En crear y editar, el formulario ofrece un select con las categorías del
+      catálogo y la categoría elegida queda guardada en la columna `category`.
+- [ ] CA-8: `/admin` mantiene todas las funcionalidades (crear, editar, eliminar,
+      stock) tras su rediseño.
 
 ## 5. Fuera de alcance
 
@@ -132,6 +154,10 @@ de la tabla products y, si corresponde, su imagen en Storage.
    validación ≤ 2 MB y MIME jpg/png/webp. ✅
 4. **Visibilidad:** productos nuevos se **publican directo y visibles en `/tienda`**. ✅
 5. **Stock inicial:** 0; boton `−` deshabilitado en stock 0. ✅
+6. **Categoría:** select con categorías del catálogo en crear/editar; persiste en
+   `category`. ✅
+7. **Rediseño `/admin`:** armónico, intuitivo y extendible (mobile-first, marca, WCAG),
+   sin romper funcionalidades existentes. ✅
 
 Veredicto QA: "Aprobada con observaciones" — observaciones 1–5 aplicadas.
 Lista para fase de plan (`plan.md`).

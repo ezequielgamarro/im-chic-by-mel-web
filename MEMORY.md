@@ -19,6 +19,7 @@ Front (src/): AuthContext (useAuth), ProtectedRoute, LoginPage, AdminPage con Pr
 Notas: precio es-AR (Intl.NumberFormat); stock UPDATE optimista con rollback (T9); docs M2 corregido.
 Hallazgos menores opcionales: L4 imagen huérfana, L5 RPC atómico, L6 feedback no-admin. Sin pendientes críticos; lista para deploy.
 T13 (2026-10-02): botón "Eliminar" en ProductCard con confirmación (window.confirm), delete de fila + remove de Storage (ruta extraída de /object/public/productos/), estado "Eliminando…" y error con role=alert; lista se refresca con fetchProducts. Build OK.
+T14+T15 (2026-10-02): ProductForm con <select> de categoría (Cuidado de la Piel, Maquillaje, Labios, Accesorios, Productos; default "Productos"; precarga en edición) e INSERT/UPDATE con `category`; ProductCard muestra badge de categoría. /admin rediseñada (AdminPage): secciones Crear producto / Mi catálogo (Productos), header con Cerrar sesión, estados loading/error/vacío/edición preservados, móvil-first, AA. Build OK.
 
 ## Decisiones arquitectónicas
 - SDD obligatorio: leer docs/constitution.md y documentar spec + plan antes de tocar .jsx.
