@@ -1,0 +1,16 @@
+# Dependencias y build
+node_modules
+dist
+
+# Variables de entorno (NO subir claves reales)
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Tooling de IA
+.claude/
+.continue/
+.agents/
+skills/
+skills-lock.json
