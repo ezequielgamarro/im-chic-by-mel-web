@@ -23,14 +23,33 @@ const slugify = (text) =>
     .slice(0, 60);
 
 /**
- * Formulario de alta de producto (tarea T8).
- * Valida campos obligatorios, precio > 0 y foto (jpg/png/webp, ≤ 2 MB),
- * sube la imagen a Storage y hace INSERT en `products` (stock 0).
+ * Extrae la ruta del objeto dentro del bucket `productos` a partir de su
+ * URL pública. Devuelve null si no se reconoce el formato.
  */
-export default function ProductForm({ onCreated }) {
-  const [title, setTitle] = useState('');
-  const [price, setPrice] = useState('');
-  const [description, setDescription] = useState('');
+const extractStoragePath = (imageUrl) => {
+  if (!imageUrl || typeof imageUrl !== 'string') return null;
+  const marker = '/object/public/productos/';
+  const idx = imageUrl.indexOf(marker);
+  if (idx === -1) return null;
+  const path = imageUrl.slice(idx + marker.length).split('?')[0];
+  return path ? decodeURIComponent(path) : null;
+};
+
+/**
+ * Formulario de producto (tarea T8: alta, tarea T12: edición).
+ * En modo "crear" (sin `product`) hace INSERT; en modo "editar" (con
+ * `product`) precarga los datos y hace UPDATE. Reutiliza las mismas
+ * validaciones de RF-2 (precio > 0, imagen jpg/png/webp, ≤ 2 MB).
+ */
+export default function ProductForm({ onCreated, onUpdated, onCancel, product = null }) {
+  const isEdit = Boolean(product);
+  const [title, setTitle] = useState(product?.title ?? '');
+  const [price, setPrice] = useState(
+    product && product.price !== undefined && product.price !== null
+      ? String(product.price)
+      : ''
+  );
+  const [description, setDescription] = useState(product?.description ?? '');
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState('');
   const [errors, setErrors] = useState({});
@@ -67,11 +86,12 @@ export default function ProductForm({ onCreated }) {
       next.description = 'Ingresá una descripción.';
     }
 
-    if (!file) {
+    const hasImage = Boolean(file) || (isEdit && product?.image_url);
+    if (!hasImage) {
       next.photo = 'Subí una foto del producto.';
-    } else if (!ALLOWED_MIME[file.type]) {
+    } else if (file && !ALLOWED_MIME[file.type]) {
       next.photo = 'La foto debe ser JPG, PNG o WebP.';
-    } else if (file.size > MAX_SIZE) {
+    } else if (file && file.size > MAX_SIZE) {
       next.photo = 'La foto no puede superar los 2 MB.';
     }
 
@@ -88,40 +108,81 @@ export default function ProductForm({ onCreated }) {
 
     setSubmitting(true);
     try {
-      const ext = ALLOWED_MIME[file.type] || file.name.split('.').pop().toLowerCase();
-      const slug = slugify(title) || 'producto';
-      const path = `productos/${Date.now()}-${slug}.${ext}`;
+      let imageUrl = isEdit ? product?.image_url || null : null;
+      let uploadedPath = null;
 
-      // 1) Subida a Storage.
-      const { error: uploadError } = await supabase.storage
-        .from('productos')
-        .upload(path, file);
-      if (uploadError) throw uploadError;
+      // 1) Si se reemplaza la foto, subir la nueva a Storage.
+      if (file) {
+        const ext = ALLOWED_MIME[file.type] || file.name.split('.').pop().toLowerCase();
+        const slug = slugify(title) || 'producto';
+        uploadedPath = `productos/${Date.now()}-${slug}.${ext}`;
 
-      // 2) URL pública de la imagen subida.
-      const { data: urlData } = supabase.storage
-        .from('productos')
-        .getPublicUrl(path);
-      const imageUrl = urlData?.publicUrl;
+        const { error: uploadError } = await supabase.storage
+          .from('productos')
+          .upload(uploadedPath, file);
+        if (uploadError) throw uploadError;
 
-      // 3) Insert en la tabla de productos (stock inicial 0).
-      const { error: insertError } = await supabase.from('products').insert({
-        title: title.trim(),
-        price: Number(price),
-        description: description.trim(),
-        image_url: imageUrl,
-        stock: 0,
-      });
-      if (insertError) throw insertError;
+        const { data: urlData } = supabase.storage
+          .from('productos')
+          .getPublicUrl(uploadedPath);
+        imageUrl = urlData?.publicUrl;
+      }
 
-      // Reset del formulario.
-      setTitle('');
-      setPrice('');
-      setDescription('');
-      setFile(null);
-      setPreviewUrl('');
-      if (fileInputRef.current) fileInputRef.current.value = '';
-      onCreated?.();
+      if (isEdit) {
+        // 2) UPDATE de la fila existente.
+        const payload = {
+          title: title.trim(),
+          price: Number(price),
+          description: description.trim(),
+        };
+        if (file) payload.image_url = imageUrl;
+
+        const { error: updateError } = await supabase
+          .from('products')
+          .update(payload)
+          .eq('id', product.id);
+        if (updateError) {
+          // Limpia la imagen recién subida para no dejar huérfanos.
+          if (uploadedPath) {
+            await supabase.storage.from('productos').remove([uploadedPath]).catch(() => {});
+          }
+          throw updateError;
+        }
+
+        // 3) Si se reemplazó la foto, borrar la imagen anterior del bucket.
+        if (file && product?.image_url) {
+          const oldPath = extractStoragePath(product.image_url);
+          if (oldPath && oldPath !== uploadedPath) {
+            await supabase.storage.from('productos').remove([oldPath]).catch(() => {});
+          }
+        }
+
+        onUpdated?.();
+      } else {
+        // 2) INSERT en la tabla de productos (stock inicial 0).
+        const { error: insertError } = await supabase.from('products').insert({
+          title: title.trim(),
+          price: Number(price),
+          description: description.trim(),
+          image_url: imageUrl,
+          stock: 0,
+        });
+        if (insertError) {
+          if (uploadedPath) {
+            await supabase.storage.from('productos').remove([uploadedPath]).catch(() => {});
+          }
+          throw insertError;
+        }
+
+        // Reset del formulario solo en modo alta.
+        setTitle('');
+        setPrice('');
+        setDescription('');
+        setFile(null);
+        setPreviewUrl('');
+        if (fileInputRef.current) fileInputRef.current.value = '';
+        onCreated?.();
+      }
     } catch (err) {
       setSubmitError(
         err?.message || 'No pudimos guardar el producto. Intentalo de nuevo.'
@@ -136,7 +197,7 @@ export default function ProductForm({ onCreated }) {
       <div className="flex items-center gap-2 mb-4">
         <ImagePlus size={20} className="text-[#7A1333]" aria-hidden="true" />
         <h2 className="font-serif text-lg sm:text-xl font-semibold">
-          Nuevo producto
+          {isEdit ? 'Editar producto' : 'Nuevo producto'}
         </h2>
       </div>
 
@@ -164,17 +225,17 @@ export default function ProductForm({ onCreated }) {
               className="sr-only"
             />
             <ImagePlus size={18} aria-hidden="true" />
-            <span>{file ? 'Cambiar foto' : 'Subir foto'}</span>
+            <span>{file || isEdit ? 'Cambiar foto' : 'Subir foto'}</span>
           </label>
-          {previewUrl ? (
+          {previewUrl || (isEdit && product?.image_url && !file) ? (
             <div className="flex items-center gap-3 mt-1">
               <img
-                src={previewUrl}
-                alt="Vista previa de la foto seleccionada"
+                src={previewUrl || product?.image_url}
+                alt={previewUrl ? 'Vista previa de la foto seleccionada' : `Imagen actual de ${product?.title ?? 'producto'}`}
                 className="w-16 h-16 rounded-xl object-cover border border-[#5A0B22]/10"
               />
               <p className="text-xs text-[#5A0B22]/70 break-all">
-                {file?.name}
+                {file ? file.name : 'Imagen actual'}
               </p>
             </div>
           ) : null}
@@ -307,10 +368,21 @@ export default function ProductForm({ onCreated }) {
           ) : (
             <>
               <Save size={18} className="text-[#F7E7B4]" aria-hidden="true" />
-              <span>Guardar producto</span>
+              <span>{isEdit ? 'Guardar cambios' : 'Guardar producto'}</span>
             </>
           )}
         </button>
+
+        {isEdit && onCancel ? (
+          <button
+            type="button"
+            onClick={onCancel}
+            disabled={submitting}
+            className="min-h-[44px] inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-white border border-[#5A0B22]/20 text-[#5A0B22] font-semibold text-sm hover:bg-[#FFC9D6]/30 transition-colors disabled:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5A0B22]"
+          >
+            Cancelar
+          </button>
+        ) : null}
       </form>
     </section>
   );

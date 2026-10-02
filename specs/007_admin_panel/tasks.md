@@ -69,5 +69,17 @@
 ## T11 — Regresión visual y build final
 - **Objetivo:** validar el flujo completo y la constitución.
 - **Archivos/áreas:** ninguna (solo verificación).
-- **Aceptación:** flujo login → subir producto → ajustar stock funciona en móvil; Navbar/TurnoModal/Footer/páginas públicas intactas; `npm run build` OK; sin errores de consola.
+- **Aceptación:** flujo login → subir producto → ajustar stock → editar → eliminar funciona en móvil; Navbar/TurnoModal/Footer/páginas públicas intactas; `npm run build` OK; sin errores de consola.
 - **No romper:** si algo se rompió, revertir la tarea responsable antes de cerrar.
+
+## T12 — Editar producto
+- **Objetivo:** permitir editar un producto existente desde el panel (precargar ProductForm y persistir cambios).
+- **Archivos/áreas:** `src/components/admin/ProductForm.jsx` (modo edición con precarga), `src/pages/AdminPage.jsx`.
+- **Aceptación:** al seleccionar "Editar", el formulario se precarga con título, precio, descripción e imagen actuales; al guardar, la fila se actualiza en Supabase; si se reemplaza la imagen, se sube a Storage con las validaciones de T8 y se actualiza `image_url`; la lista del panel refleja el cambio.
+- **No romper:** no alterar el modo "nuevo producto" ni el layout existente.
+
+## T13 — Eliminar producto
+- **Objetivo:** borrar un producto desde el panel con confirmación explícita.
+- **Archivos/áreas:** `src/pages/AdminPage.jsx`, posible `src/components/admin/ProductList.jsx` (botón Eliminar).
+- **Aceptación:** botón "Eliminar" por producto con confirmación antes de ejecutar; al confirmar, se borra la fila en la tabla `products` y, si aplica, la imagen correspondiente en Storage; el producto desaparece de la lista del panel y de `/tienda`; `npm run build` OK y sin errores de consola.
+- **No romper:** no afectar el control de stock ni la subida de productos; re-verificar regresión de T11 al cierre.

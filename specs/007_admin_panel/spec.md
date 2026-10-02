@@ -71,6 +71,28 @@ el stock disponible de cada producto en tiempo real.
   deshabilitado** (decidido).
 - Los cambios se persisten en Supabase sin recargar la página.
 
+### RF-4 — Editar producto (EARS: CUANDO ... ENTONCES ...)
+
+CUANDO el administrador seleccione editar un producto y guarde los cambios (título,
+precio, descripción, y opcionalmente reemplace la foto), EL SISTEMA actualizará esa
+fila en Supabase.
+
+- El formulario se precarga con los datos actuales del producto.
+- Si se reemplaza la foto, se sube la nueva imagen a Storage (mismas validaciones de
+  RF-2) y se actualiza `image_url`; si corresponde, se borra la imagen anterior.
+- Las validaciones de RF-2 aplican también al editar (precio positivo, MIME
+  jpg/png/webp, tamaño ≤ 2 MB).
+
+### RF-5 — Eliminar producto (EARS: CUANDO ... ENTONCES ...)
+
+CUANDO el administrador confirme la eliminación de un producto, EL SISTEMA lo borrará
+de la tabla products y, si corresponde, su imagen en Storage.
+
+- Confirmación explícita antes de borrar (diálogo o mensaje inline).
+- La fila se elimina de `products` y, si la imagen existía en el bucket, se borra de
+  Storage.
+- El producto desaparece de la lista del panel y de `/tienda` tras la operación.
+
 ## 3. Restricciones / Constitución
 
 1. **Mobile-First:** el panel se usa probablemente desde el celular; todos los controles
@@ -97,7 +119,7 @@ el stock disponible de cada producto en tiempo real.
 ## 5. Fuera de alcance
 
 - Roles múltiples de usuarios / panel multiusuario.
-- Edición completa y borrado de productos (puede añadirse en spec posterior).
+- Borrado en lote o archivado de productos (puede añadirse en spec posterior).
 - Pasarela de pagos o gestión de pedidos.
 - Migración de Tailwind CDN a build.
 - Compresión/resize de imágenes en cliente.

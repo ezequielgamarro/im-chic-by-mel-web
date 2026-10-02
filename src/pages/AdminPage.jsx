@@ -24,6 +24,9 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [signingOut, setSigningOut] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
+  const [deleteError, setDeleteError] = useState('');
 
   const fetchProducts = useCallback(async () => {
     setLoading(true);
@@ -45,6 +48,61 @@ export default function AdminPage() {
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
+
+  // Extrae la ruta del objeto dentro del bucket `productos` desde su URL pública.
+  const extractStoragePath = (publicUrl) => {
+    if (!publicUrl || typeof publicUrl !== 'string') return null;
+    const marker = '/object/public/productos/';
+    const idx = publicUrl.indexOf(marker);
+    if (idx === -1) return null;
+    const path = publicUrl.slice(idx + marker.length).split('?')[0];
+    try {
+      return decodeURIComponent(path);
+    } catch {
+      return path;
+    }
+  };
+
+  const handleDelete = useCallback(
+    async (product) => {
+      const confirmed = window.confirm(
+        `¿Seguro que querés eliminar "${product.title}"? Esta acción no se puede deshacer.`
+      );
+      if (!confirmed) return;
+
+      setDeletingId(product.id);
+      setDeleteError('');
+
+      const { error: rowError } = await supabase
+        .from('products')
+        .delete()
+        .eq('id', product.id);
+
+      if (rowError) {
+        setDeleteError(
+          `No pudimos eliminar "${product.title}". Intentá de nuevo.`
+        );
+        setDeletingId(null);
+        return;
+      }
+
+      const path = extractStoragePath(product.image_url);
+      if (path) {
+        const { error: storageError } = await supabase.storage
+          .from('productos')
+          .remove([path]);
+        if (storageError) {
+          setDeleteError(
+            `El producto se eliminó, pero no pudimos borrar su imagen del Storage.`
+          );
+        }
+      }
+
+      setDeletingId(null);
+      await fetchProducts();
+    },
+    [fetchProducts]
+  );
 
   const handleSignOut = async () => {
     setSigningOut(true);
@@ -82,6 +140,20 @@ export default function AdminPage() {
       </header>
 
       <main className="max-w-3xl mx-auto px-4 sm:px-6 py-6">
+        {editingProduct ? (
+          <div className="mb-6">
+            <ProductForm
+              key={editingProduct.id}
+              product={editingProduct}
+              onUpdated={() => {
+                setEditingProduct(null);
+                fetchProducts();
+              }}
+              onCancel={() => setEditingProduct(null)}
+            />
+          </div>
+        ) : null}
+
         <div className="flex items-center gap-2 mb-4">
           <Boxes size={20} className="text-[#7A1333]" aria-hidden="true" />
           <h2 className="font-serif text-lg sm:text-xl font-semibold">
@@ -93,6 +165,16 @@ export default function AdminPage() {
             </span>
           )}
         </div>
+
+        {deleteError && (
+          <div
+            role="alert"
+            className="mb-4 flex items-start gap-2 bg-white/80 border border-[#B91C1C]/20 rounded-2xl p-4 text-sm text-[#B91C1C] font-medium"
+          >
+            <AlertTriangle size={18} className="mt-0.5 shrink-0" aria-hidden="true" />
+            <span>{deleteError}</span>
+          </div>
+        )}
 
         {loading ? (
           <div
@@ -145,11 +227,17 @@ export default function AdminPage() {
             </p>
           </div>
         ) : (
-          <ProductList products={products} onStockChange={handleStockChange} />
+          <ProductList
+            products={products}
+            onStockChange={handleStockChange}
+            onEdit={setEditingProduct}
+            onDelete={handleDelete}
+            deletingId={deletingId}
+          />
         )}
 
         <div className="mt-8">
-          <ProductForm onCreated={fetchProducts} />
+          {!editingProduct && <ProductForm onCreated={fetchProducts} />}
         </div>
       </main>
     </div>
