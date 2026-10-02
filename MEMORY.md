@@ -18,6 +18,7 @@ Storage bucket `productos` (público, 2MB, jpg/png/webp) con políticas write so
 Front (src/): AuthContext (useAuth), ProtectedRoute, LoginPage, AdminPage con ProductList/ProductCard/ProductForm/StockControls; migración en supabase/migrations/.
 Notas: precio es-AR (Intl.NumberFormat); stock UPDATE optimista con rollback (T9); docs M2 corregido.
 Hallazgos menores opcionales: L4 imagen huérfana, L5 RPC atómico, L6 feedback no-admin. Sin pendientes críticos; lista para deploy.
+T13 (2026-10-02): botón "Eliminar" en ProductCard con confirmación (window.confirm), delete de fila + remove de Storage (ruta extraída de /object/public/productos/), estado "Eliminando…" y error con role=alert; lista se refresca con fetchProducts. Build OK.
 
 ## Decisiones arquitectónicas
 - SDD obligatorio: leer docs/constitution.md y documentar spec + plan antes de tocar .jsx.
