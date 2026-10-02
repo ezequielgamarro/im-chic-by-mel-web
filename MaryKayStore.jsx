@@ -1,5 +1,5 @@
-﻿import Navbar from "./src/components/Navbar";
-import React, { useState, useMemo } from 'react';
+import Navbar from "./src/components/Navbar";
+import React, { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -28,6 +28,7 @@ import {
 import WhatsAppButton from './src/components/WhatsAppButton';
 import SparkleButton from './src/components/SparkleButton';
 import InstagramButton from './src/components/InstagramButton';
+import { supabase } from './src/lib/supabase';
 
 // Imágenes de Productos Mary Kay
 import imgTwAvanzado from './src/assets/img/Productos/img-TW-avanzado.jpg';
@@ -49,6 +50,19 @@ import imgSombraDuoPinkChampagne from './src/assets/img/Productos/f3abfa5c58d3ab
 import imgSombraMoonstone from './src/assets/img/Productos/ac59f7a943fc459f05563057e90ecedd.jpg';
 import imgSombraSmokeyQuartz from './src/assets/img/Productos/ba7be96122c1306ce863b974828982dd.jpg';
 import imgProtectorSolarMineral30 from './src/assets/img/Productos/bae5ab5cc46d47e4f913516f821e948b.jpg';
+import imgAguaMicelar from './src/assets/img/Productos/10160886_1_J2000196-UNL-GB-036-MARY-KAY-MICELLAR-WATER-cropped.jpg';
+import imgDesmaquillanteOjos from './src/assets/img/Productos/J2003169-UNL-GB-0368-OIL-FREE-EYE-MAKEUP-REMOVER-HiRes.jpg';
+import imgTwEyeCream from './src/assets/img/Productos/J2008051-UNL-GB-010-TW-Eye-Cream-HiRes.jpg';
+import imgTw3dFoundationLuminous from './src/assets/img/Productos/795510-UNL-GB-045-Soldier-TW3D-Foundation-Luminous-BeigeN190-Hi-Res.jpg';
+import imgTw3dFoundationMatte from './src/assets/img/Productos/795510-UNL-GB-045-Soldier-TW3D-Foundation-Matte-BeigeC140-Hi-Res.jpg';
+import imgNourishingOil from './src/assets/img/Productos/J2010909-UNL-GB-030-Nourishing-Oil-1-Soldier-HiRes.jpg';
+import imgLipButterDulceLatte from './src/assets/img/Productos/J2012935-UNL-GB-064-LE-Tinted-Lip-Butter-Dulce-Latte-Soldier-1-HiRes.jpg';
+import imgLipButterPassionfruit from './src/assets/img/Productos/J2012935-UNL-GB-070-LE-Tinted-Lip-Butter-Passionfruit-Kiss-Soldier-1-HiRes.jpg';
+import imgLipButterRaspberry from './src/assets/img/Productos/J2012935-UNL-GB-073-LE-Tinted-Lip-Butter-Raspberry-Sorbet-Soldier-1-HiRes.jpg';
+import imgFoamingCleanser from './src/assets/img/Productos/52201-043-FoamingCleanser-Hi-Res.jpg';
+import imgLocionTw from './src/assets/img/Productos/locionTW.jpg';
+import imgCcCream from './src/assets/img/Productos/10087310.jpg';
+import imgSunscreen2 from './src/assets/img/Productos/111652 MaryKay Sunscreen 10087311.jpg';
 import imgPerfilMaryKay from './src/assets/img/perfil mary kay2.png';
 
 /**
@@ -86,8 +100,9 @@ function ImageWithFallback({ src, alt, className, containerClassName = "w-full h
   );
 }
 
-// Catálogo oficial de productos con imágenes reales de stock
-const products = [
+// Catálogo oficial de productos con imágenes reales de stock (respaldo).
+// Se usa como fallback mientras Supabase no tenga productos cargados desde el panel.
+const fallbackProducts = [
   {
     id: 1,
     name: "Set Milagroso TimeWise 3D® Avanzado",
@@ -268,12 +283,169 @@ const products = [
     badge: "",
     price: 15200,
   },
+  {
+    id: 19,
+    name: "Agua Micelar Mary Kay®",
+    category: "Cuidado de la Piel",
+    description: "Remueve el maquillaje y las impurezas de la superficie del rostro. Limpia suavemente la piel, deja la piel hidratada, no requiere enjuague. No reemplaza los beneficios del Desmaquillante de ojos libre de aceite.",
+    image: imgAguaMicelar,
+    icon: Droplets,
+    badge: "Limpieza",
+    price: 36700,
+  },
+  {
+    id: 20,
+    name: "Desmaquillante de Ojos Libre de Aceite Mary Kay®",
+    category: "Cuidado de la Piel",
+    description: "Remueve fácilmente hasta el maquillaje más resistente, sin irritar ni maltratar la delicada zona de los ojos.",
+    image: imgDesmaquillanteOjos,
+    icon: Eye,
+    badge: "Más Vendido",
+    price: 45000,
+  },
+  {
+    id: 21,
+    name: "Crema para el Contorno de Ojos TimeWise®",
+    category: "Cuidado de la Piel",
+    description: "Ayuda a mejorar múltiples signos de envejecimiento y fatiga, como ojeras, hinchazón, finas líneas y arrugas. Proporciona 12 hs de humectación.",
+    image: imgTwEyeCream,
+    icon: Eye,
+    badge: "",
+    price: 39300,
+  },
+  {
+    id: 22,
+    name: "Base TimeWise 3D® Luminosa (Beige N190)",
+    category: "Maquillaje",
+    description: "Base de maquillaje con acabado luminoso que proporciona 12 horas de hidratación y una cobertura impecable.",
+    image: imgTw3dFoundationLuminous,
+    icon: Palette,
+    badge: "",
+    price: 28900,
+  },
+  {
+    id: 23,
+    name: "Base TimeWise 3D® Mate (Beige C140)",
+    category: "Maquillaje",
+    description: "Base de maquillaje con acabado mate que controla el brillo y la grasa por 12 horas, brindando una cobertura perfecta.",
+    image: imgTw3dFoundationMatte,
+    icon: Palette,
+    badge: "",
+    price: 28900,
+  },
+  {
+    id: 24,
+    name: "Óleo Nutritivo Mary Kay Naturally®",
+    category: "Cuidado de la Piel",
+    description: "Óleo nutritivo hidratante que revitaliza la piel, dejándola hidratada, suave y con un aspecto saludable.",
+    image: imgNourishingOil,
+    icon: Sparkles,
+    badge: "Natural",
+    price: 60000,
+  },
+  {
+    id: 25,
+    name: "Bálsamo Labial con Color (Dulce Latte)",
+    category: "Labios",
+    description: "Bálsamo labial hidratante que aporta un toque de color y brillo sutil con un agradable aroma.",
+    image: imgLipButterDulceLatte,
+    icon: Smile,
+    badge: "Edición Limitada",
+    price: 28300,
+  },
+  {
+    id: 26,
+    name: "Bálsamo Labial con Color (Passionfruit Kiss)",
+    category: "Labios",
+    description: "Bálsamo labial hidratante que aporta un toque de color y brillo sutil con un agradable aroma a maracuyá.",
+    image: imgLipButterPassionfruit,
+    icon: Smile,
+    badge: "Edición Limitada",
+    price: 28300,
+  },
+  {
+    id: 27,
+    name: "Bálsamo Labial con Color (Raspberry Sorbet)",
+    category: "Labios",
+    description: "Bálsamo labial hidratante que aporta un toque de color y brillo sutil con un agradable aroma a frambuesa.",
+    image: imgLipButterRaspberry,
+    icon: Smile,
+    badge: "Edición Limitada",
+    price: 28300,
+  },
+  {
+    id: 28,
+    name: "Espuma Limpiadora Facial Volu-Firm® TimeWise Repair®",
+    category: "Cuidado de la Piel",
+    description: "Limpia y renueva la textura de la piel, dejándola con una sensación de hidratación y lista para los siguientes pasos de tu rutina.",
+    image: imgFoamingCleanser,
+    icon: Droplets,
+    badge: "Repair",
+    price: 57000,
+  },
+  {
+    id: 29,
+    name: "Loción Facial Protectora de dia con FPS 30 TimeWise®",
+    category: "Cuidado de la Piel",
+    description: "Con protección UVA/UVB formulada con Extracto de Fruta de Nopal para fortalecer la barrera de humedad de la piel y reducir la apariencia de finas lineas.",
+    image: imgLocionTw,
+    icon: Droplets,
+    badge: "",
+    price: 51500,
+  },
+  {
+    id: 30,
+    name: "Crema Correctora con Color CC Cream FPS 15",
+    category: "Maquillaje",
+    description: "Actúa como maquillaje y cuidado de la piel. Corrige, ilumina, hidrata y protege tu piel con FPS 15.",
+    image: imgCcCream,
+    icon: Palette,
+    badge: "CC Cream",
+    price: 33000,
+  },
+  {
+    id: 31,
+    name: "Medium To Deep Mary Kay®",
+    category: "Cuidado de la Piel",
+    description: "Actúa como maquillaje y cuidado de la piel. Corrige, ilumina, hidrata y protege tu piel con FPS 15.",
+    image: imgSunscreen2,
+    icon: ShieldCheck,
+    badge: "",
+    price: 33000,
+  },
 ];
 
 // Helper de formato de moneda
 const formatPrice = (price) => {
   return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(price);
 };
+
+// Mapea una fila de Supabase (tabla `products`) a la forma que espera la tienda.
+// Columnas de Supabase: id, title, price, description, image_url, stock.
+// No existen `category`, `icon` ni `badge` en Supabase; usamos valores neutros
+// por defecto para mantener intactos los filtros y placeholders de la UI.
+// Deriva el ícono del producto desde su categoría.
+const iconForCategory = (category) => {
+  switch (category) {
+    case 'Cuidado de la Piel': return Droplets;
+    case 'Maquillaje': return Palette;
+    case 'Labios': return Smile;
+    case 'Accesorios': return Camera;
+    default: return Camera;
+  }
+};
+
+const mapProduct = (row) => ({
+  id: row.id,
+  name: row.title,
+  category: row.category || 'Productos',
+  description: row.description || '',
+  image: row.image_url || '',
+  icon: iconForCategory(row.category),
+  badge: row.badge || '',
+  price: Number(row.price) || 0,
+  stock: Number(row.stock) || 0,
+});
 
 /**
  * Componente ProductCard
@@ -366,6 +538,45 @@ export default function MaryKayStore() {
   const [searchQuery, setSearchQuery] = useState('');
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
+
+  // Carga el catálogo desde Supabase. Si está vacío o falla, cae al catálogo de
+  // respaldo para no romper la tienda (estabilidad estructural).
+  useEffect(() => {
+    let mounted = true;
+
+    const loadProducts = async () => {
+      const { data, error } = await supabase
+        .from('products')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (!mounted) return;
+
+      if (error) {
+        setLoadError(
+          'No pudimos cargar el catálogo en vivo. Mostramos el catálogo de respaldo.'
+        );
+        setProducts(fallbackProducts);
+      } else if (data && data.length > 0) {
+        setLoadError('');
+        setProducts(data.map(mapProduct));
+      } else {
+        setLoadError('');
+        setProducts(fallbackProducts);
+      }
+
+      setLoading(false);
+    };
+
+    loadProducts();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const whatsappNumber = "5493813553492";
 
@@ -440,7 +651,7 @@ export default function MaryKayStore() {
 
   const categories = useMemo(() => {
     return ['Todos', ...Array.from(new Set(products.map((p) => p.category)))];
-  }, []);
+  }, [products]);
 
   const filteredProducts = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
@@ -453,7 +664,7 @@ export default function MaryKayStore() {
         product.category.toLowerCase().includes(query);
       return matchesCategory && matchesSearch;
     });
-  }, [activeCategory, searchQuery]);
+  }, [products, activeCategory, searchQuery]);
 
   return (
     <div className="min-h-screen bg-[#FFF0F3] text-[#5A0B22] font-sans selection:bg-[#5A0B22] selection:text-white relative overflow-x-hidden">
