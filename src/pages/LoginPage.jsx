@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LogIn, Mail, Lock } from 'lucide-react';
+import GoogleButton from '../components/GoogleButton';
+import { LogIn, Mail, Lock, AlertCircle } from 'lucide-react';
 
 /**
  * Página de login del panel de administración (tarea T6).
@@ -11,6 +12,7 @@ import { LogIn, Mail, Lock } from 'lucide-react';
  */
 export default function LoginPage() {
   const { isAdmin, loading, signIn } = useAuth();
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -52,8 +54,8 @@ export default function LoginPage() {
     setSubmitting(true);
     try {
       await signIn(email.trim(), password);
-      // El login exitoso actualiza la sesión; el chequeo `isAdmin` de arriba
-      // redirige automáticamente a /admin al re-renderizar.
+      // Redirigir al panel de administración tras login exitoso
+      navigate('/admin', { replace: true });
     } catch (err) {
       setError(
         err?.message ||
@@ -136,6 +138,15 @@ export default function LoginPage() {
             </div>
           </div>
 
+          <div className="text-right">
+            <Link
+              to="/reset-password"
+              className="text-xs text-[#7A1333] hover:text-[#5A0B22] underline"
+            >
+              ¿Olvidé mi contraseña?
+            </Link>
+          </div>
+
           {error && (
             <p
               role="alert"
@@ -166,6 +177,18 @@ export default function LoginPage() {
             )}
           </button>
         </form>
+
+        {/* Separador + Google */}
+        <div className="flex items-center gap-3 my-5">
+          <span className="flex-1 h-px bg-[#5A0B22]/15" aria-hidden="true" />
+          <span className="text-xs font-semibold uppercase tracking-wider text-[#5A0B22]/50">o</span>
+          <span className="flex-1 h-px bg-[#5A0B22]/15" aria-hidden="true" />
+        </div>
+        <GoogleButton label="Continuar con Google" />
+
+        <p className="text-center text-sm text-[#5A0B22]/60 mt-6">
+          ¿No tenés cuenta? <Link to="/registro" className="font-semibold underline hover:text-[#7A1333]">Registrarse</Link>
+        </p>
       </main>
     </div>
   );

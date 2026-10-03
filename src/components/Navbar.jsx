@@ -1,12 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Calendar, ChevronRight } from 'lucide-react';
+import { Menu, X, Calendar, ChevronRight, User, LogIn, UserPlus, LogOut } from 'lucide-react';
 import { useTurno } from '../context/TurnoContext';
+import { useAuth } from '../context/AuthContext';
+
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const { open: openTurno } = useTurno();
+  const { user, isAdmin, signOut } = useAuth();
   const menuButtonRef = useRef(null);
 
   const navLinks = [
@@ -43,6 +46,14 @@ export default function Navbar() {
   const handleOpenTurno = () => {
     closeMenu();
     openTurno();
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch (err) {
+      console.error('Error al cerrar sesión:', err);
+    }
   };
 
   return (
@@ -132,6 +143,46 @@ export default function Navbar() {
               <Calendar className="w-3.5 h-3.5 text-[#F7E7B4]" />
               <span>Agenda tu turno</span>
             </button>
+            
+            {/* Auth buttons desktop */}
+            {user ? (
+              <div className="flex items-center gap-2">
+                {isAdmin && (
+                  <Link
+                    to="/admin"
+                    className="inline-flex items-center gap-1.5 px-3 py-2 min-h-[44px] rounded-full bg-gradient-to-r from-[#7A1333] to-[#5A0B22] text-white text-xs font-semibold tracking-wide shadow-sm hover:shadow-md transition cursor-pointer"
+                  >
+                    <User size={14} />
+                    <span>Panel Admin</span>
+                  </Link>
+                )}
+                <Link
+                  to="/cuenta"
+                  className="inline-flex items-center gap-1.5 px-3 py-2 min-h-[44px] rounded-full bg-white border border-[#5A0B22]/15 text-[#5A0B22] font-semibold text-sm hover:bg-[#FFC9D6]/30 transition-colors"
+                >
+                  <User size={14} />
+                  <span className="hidden sm:inline">{user?.user_metadata?.full_name || user?.email?.split('@')[0]}</span>
+                </Link>
+                <button
+                  type="button"
+                  onClick={handleSignOut}
+                  className="inline-flex items-center gap-1.5 px-3 py-2 min-h-[44px] rounded-full bg-white border border-[#5A0B22]/15 text-[#5A0B22] font-semibold text-sm hover:bg-[#FFC9D6]/30 transition-colors"
+                >
+                  <LogOut size={14} />
+                  <span className="hidden sm:inline">Salir</span>
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Link
+                  to="/login"
+                  className="inline-flex items-center gap-1.5 px-3 py-2 min-h-[44px] rounded-full bg-white border border-[#5A0B22]/15 text-[#5A0B22] font-semibold text-sm hover:bg-[#FFC9D6]/30 transition-colors"
+                >
+                  <LogIn size={14} />
+                  <span>Ingresar</span>
+                </Link>
+              </div>
+            )}
           </div>
 
           {/* Hamburger móvil */}
@@ -184,6 +235,49 @@ export default function Navbar() {
                     <span>Agenda tu turno</span>
                   </button>
                 </div>
+
+                {/* Auth section mobile */}
+                {user ? (
+                  <div className="pt-2 border-t border-[#FFC9D6]/60 flex flex-col gap-2">
+                    {isAdmin && (
+                      <Link
+                        to="/admin"
+                        onClick={closeMenu}
+                        className="w-full min-h-[44px] py-2 px-4 rounded-xl bg-gradient-to-r from-[#7A1333] to-[#5A0B22] text-white font-medium text-sm flex items-center justify-center gap-2 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5A0B22]"
+                      >
+                        <User size={18} />
+                        <span>Panel Admin</span>
+                      </Link>
+                    )}
+                    <Link
+                      to="/cuenta"
+                      onClick={closeMenu}
+                      className="w-full min-h-[44px] py-2 px-4 rounded-xl bg-white border border-[#5A0B22]/15 text-[#5A0B22] font-semibold text-sm hover:bg-[#FFC9D6]/30 transition-colors flex items-center justify-center gap-2"
+                    >
+                      <User size={18} />
+                      <span>{user?.user_metadata?.full_name || user?.email?.split('@')[0]}</span>
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={handleSignOut}
+                      className="w-full min-h-[44px] py-2 px-4 rounded-xl bg-white border border-[#5A0B22]/15 text-[#5A0B22] font-semibold text-sm hover:bg-[#FFC9D6]/30 transition-colors flex items-center justify-center gap-2"
+                    >
+                      <LogOut size={18} />
+                      <span>Cerrar sesión</span>
+                    </button>
+                  </div>
+                ) : (
+                  <div className="pt-2 border-t border-[#FFC9D6]/60 flex flex-col gap-2">
+                    <Link
+                      to="/login"
+                      onClick={closeMenu}
+                      className="w-full min-h-[44px] py-2 px-4 rounded-xl bg-white border border-[#5A0B22]/15 text-[#5A0B22] font-semibold text-sm hover:bg-[#FFC9D6]/30 transition-colors flex items-center justify-center gap-2"
+                    >
+                      <LogIn size={18} />
+                      <span>Iniciar sesión</span>
+                    </Link>
+                  </div>
+                )}
               </div>
             </motion.nav>
           )}

@@ -9,12 +9,14 @@ import {
   ImagePlus,
   Settings,
   Calendar,
+  CalendarCheck,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import ProductList from '../components/admin/ProductList';
 import ProductForm from '../components/admin/ProductForm';
 import TurnSettingsTab from '../components/admin/TurnSettingsTab';
+import TurnosTab from '../components/admin/TurnosTab';
 
 /**
  * Panel de administración (T7…T15).
@@ -25,7 +27,7 @@ import TurnSettingsTab from '../components/admin/TurnSettingsTab';
 export default function AdminPage() {
   const { signOut } = useAuth();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('products'); // 'products' | 'settings'
+  const [activeTab, setActiveTab] = useState('products'); // 'products' | 'appointments' | 'settings'
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -33,6 +35,16 @@ export default function AdminPage() {
   const [editingProduct, setEditingProduct] = useState(null);
   const [deletingId, setDeletingId] = useState(null);
   const [deleteError, setDeleteError] = useState('');
+  const [pendingCount, setPendingCount] = useState(0);
+
+  // Contador de turnos pendientes (para el badge de la pestaña)
+  const fetchPendingCount = useCallback(async () => {
+    const { count } = await supabase
+      .from('user_appointments')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'solicitado');
+    setPendingCount(count ?? 0);
+  }, []);
 
   const fetchProducts = useCallback(async () => {
     setLoading(true);
@@ -53,7 +65,13 @@ export default function AdminPage() {
 
   useEffect(() => {
     fetchProducts();
-  }, [fetchProducts]);
+    fetchPendingCount();
+  }, [fetchProducts, fetchPendingCount]);
+
+  // Refrescar el contador al cambiar de pestaña (por si se resolvieron turnos)
+  useEffect(() => {
+    if (activeTab === 'appointments') fetchPendingCount();
+  }, [activeTab, fetchPendingCount]);
 
   // Extrae la ruta del objeto dentro del bucket `productos` desde su URL pública.
   const extractStoragePath = (publicUrl) => {
@@ -152,6 +170,23 @@ export default function AdminPage() {
             >
               <Boxes size={18} aria-hidden="true" />
               <span>Productos</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('appointments')}
+              className={`relative px-4 py-2 rounded-lg text-sm font-medium transition-colors min-h-[44px] flex items-center gap-2 ${
+                activeTab === 'appointments'
+                  ? 'bg-gradient-to-r from-[#7A1333] to-[#5A0B22] text-white shadow-sm'
+                  : 'text-[#5A0B22]/70 hover:bg-[#FFC9D6]/30'
+              }`}
+            >
+              <CalendarCheck size={18} aria-hidden="true" />
+              <span>Turnos</span>
+              {pendingCount > 0 && (
+                <span className="ml-1 inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-[#B91C1C] text-white text-[11px] font-bold">
+                  {pendingCount}
+                </span>
+              )}
             </button>
             <button
               type="button"
@@ -300,6 +335,8 @@ export default function AdminPage() {
               )}
             </section>
           </>
+        ) : activeTab === 'appointments' ? (
+          <TurnosTab />
         ) : (
           <TurnSettingsTab />
         )}

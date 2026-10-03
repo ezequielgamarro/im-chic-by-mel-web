@@ -1,17 +1,24 @@
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
-import TurnoModal from '../components/TurnoModal';
+import TurnoModalEnhanced from '../components/TurnoModalEnhanced';
 
 const TurnoContext = createContext(null);
 
 /**
  * Provee una única instancia de TurnoModal a toda la app.
  * Uso: const { open, close } = useTurno(); open('Uñas');
+ *
+ * Siempre abre `TurnoModalEnhanced` (calendario de disponibilidad).
+ *  - Usuario logueado → guarda el turno en la BD + abre WhatsApp.
+ *  - Invitado → muestra el calendario y abre WhatsApp con la info para consultar.
  */
 export function TurnoProvider({ children }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedService, setSelectedService] = useState('');
 
   const open = useCallback((serviceName = '') => {
+    // Siempre abrimos el modal (con calendario de disponibilidad).
+    // - Logueado → guarda el turno en la BD y avisa por WhatsApp.
+    // - Invitado → muestra el calendario y manda WhatsApp con la info para consultar.
     setSelectedService(serviceName || '');
     setIsOpen(true);
   }, []);
@@ -26,7 +33,7 @@ export function TurnoProvider({ children }) {
   return (
     <TurnoContext.Provider value={value}>
       {children}
-      <TurnoModal
+      <TurnoModalEnhanced
         isOpen={isOpen}
         onClose={close}
         initialService={selectedService}
