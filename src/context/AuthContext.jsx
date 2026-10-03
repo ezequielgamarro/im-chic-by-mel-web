@@ -12,7 +12,7 @@ const AuthContext = createContext(null);
 
 /**
  * Provee autenticación global (sesión + rol admin) a toda la app.
- * Uso: const { session, user, isAdmin, loading, signIn, signOut } = useAuth();
+ * Uso: const { session, user, isAdmin, loading, signIn, signOut, register, updateProfile, syncCart } = useAuth();
  *
  * - `isAdmin` se deriva del claim `app_metadata.role === 'admin'` (definido en el
  *   JWT por Supabase Auth). La autorización real la impone RLS en el backend;
@@ -49,10 +49,27 @@ export function AuthProvider({ children }) {
     };
   }, []);
 
+  // --- Auth methods ---
+
   const signIn = useCallback(async (email, password) => {
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
+    });
+    if (error) throw error;
+    return data;
+  }, []);
+
+  const register = useCallback(async (email, password, fullName = '', phone = '') => {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: fullName,
+          phone: phone,
+        },
+      },
     });
     if (error) throw error;
     return data;
@@ -63,12 +80,66 @@ export function AuthProvider({ children }) {
     if (error) throw error;
   }, []);
 
+  const updateProfile = useCallback(async (updates) => {
+    const { data, error } = await supabase.auth.updateUser({
+      data: updates,
+    });
+    if (error) throw error;
+    return data;
+  }, []);
+
+  // --- Cart sync ---
+  const syncCart = useCallback(async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+
+    const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
+    if (localCart.length === 0) return;
+
+    // Merge localStorage cart with Supabase cart_items
+    for (const item of localCart) {
+      const { data: existing } = await supabase
+        .from('cart_items')
+        .select('quantity')
+        .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
+        .eq('product_id', item.id)
+        .single();
+
+      if (existing) {
+        await supabase
+          .from('cart_items')
+          .update({ quantity: existing.quantity + (item.quantity || 1) })
+          .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
+          .eq('product_id', item.id);
+      } else {
+        await supabase.from('cart_items').insert({
+          user_id: (await supabase.auth.getUser()).data.user?.id,
+          product_id: item.id,
+          quantity: item.quantity || 1,
+        });
+      }
+    }
+
+    // Clear localStorage after successful sync
+    localStorage.removeItem('cart');
+  }, []);
+
   const user = session?.user ?? null;
   const isAdmin = user?.app_metadata?.role === 'admin';
 
   const value = useMemo(
-    () => ({ session, user, isAdmin, loading, signIn, signOut }),
-    [session, user, isAdmin, loading, signIn, signOut]
+    () => ({
+      session,
+      user,
+      isAdmin,
+      loading,
+      signIn,
+      signOut,
+      register,
+      updateProfile,
+      syncCart,
+    }),
+    [session, user, isAdmin, loading]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -14,3 +14,9 @@ dist
 .agents/
 skills/
 skills-lock.json
+
+# Scripts temporales con secretos
+encrypt-tokens.js
+gen-tokens.js
+gen-tokens.mjs
+SPEC_008_SPIKE_SETUP.md

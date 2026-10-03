@@ -7,11 +7,14 @@ import {
   RefreshCw,
   Boxes,
   ImagePlus,
+  Settings,
+  Calendar,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
 import ProductList from '../components/admin/ProductList';
 import ProductForm from '../components/admin/ProductForm';
+import TurnSettingsTab from '../components/admin/TurnSettingsTab';
 
 /**
  * Panel de administración (T7…T15).
@@ -22,6 +25,7 @@ import ProductForm from '../components/admin/ProductForm';
 export default function AdminPage() {
   const { signOut } = useAuth();
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('products'); // 'products' | 'settings'
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -134,6 +138,35 @@ export default function AdminPage() {
               Panel de Administración
             </h1>
           </div>
+          
+          {/* Tab Navigation */}
+          <nav className="flex gap-1 bg-white/80 rounded-xl p-1 border border-[#D87F95]/30" aria-label="Secciones del panel">
+            <button
+              type="button"
+              onClick={() => setActiveTab('products')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors min-h-[44px] flex items-center gap-2 ${
+                activeTab === 'products'
+                  ? 'bg-gradient-to-r from-[#7A1333] to-[#5A0B22] text-white shadow-sm'
+                  : 'text-[#5A0B22]/70 hover:bg-[#FFC9D6]/30'
+              }`}
+            >
+              <Boxes size={18} aria-hidden="true" />
+              <span>Productos</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('settings')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors min-h-[44px] flex items-center gap-2 ${
+                activeTab === 'settings'
+                  ? 'bg-gradient-to-r from-[#7A1333] to-[#5A0B22] text-white shadow-sm'
+                  : 'text-[#5A0B22]/70 hover:bg-[#FFC9D6]/30'
+              }`}
+            >
+              <Settings size={18} aria-hidden="true" />
+              <span>Config. Turnos</span>
+            </button>
+          </nav>
+
           <button
             type="button"
             onClick={handleSignOut}
@@ -147,123 +180,129 @@ export default function AdminPage() {
       </header>
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-8">
-        {deleteError && (
-          <div
-            role="alert"
-            className="flex items-start gap-2 bg-white/80 border border-[#B91C1C]/20 rounded-2xl p-4 text-sm text-[#B91C1C] font-medium"
-          >
-            <AlertTriangle size={18} className="mt-0.5 shrink-0" aria-hidden="true" />
-            <span>{deleteError}</span>
-          </div>
-        )}
-
-        {/* Sección: crear o editar producto */}
-        {editingProduct ? (
-          <section aria-label="Formulario de edición">
-            <ProductForm
-              key={editingProduct.id}
-              product={editingProduct}
-              onUpdated={() => {
-                setEditingProduct(null);
-                fetchProducts();
-              }}
-              onCancel={() => setEditingProduct(null)}
-            />
-          </section>
-        ) : (
-          <section aria-label="Crear producto">
-            <div className="flex items-center gap-2 mb-3">
-              <ImagePlus size={20} className="text-[#D4AF37]" aria-hidden="true" />
-              <h2 className="font-serif text-lg sm:text-xl font-semibold text-[#5A0B22]">
-                Crear producto
-              </h2>
-            </div>
-            <ProductForm onCreated={fetchProducts} />
-          </section>
-        )}
-
-        {/* Sección: catálogo */}
-        <section aria-labelledby="catalog-heading">
-          <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
-            <div className="flex items-center gap-2">
-              <Boxes size={20} className="text-[#D4AF37]" aria-hidden="true" />
-              <h2
-                id="catalog-heading"
-                className="font-serif text-lg sm:text-xl font-semibold"
-              >
-                Mi catálogo
-              </h2>
-              <span className="text-sm text-[#5A0B22]/60 font-medium">
-                (Productos)
-              </span>
-            </div>
-            {!loading && !error && (
-              <span className="inline-flex items-center min-h-[28px] px-3 rounded-full bg-[#FFC9D6]/60 text-[#7A1333] text-xs font-bold">
-                {products.length} {products.length === 1 ? 'producto' : 'productos'}
-              </span>
-            )}
-          </div>
-
-          {loading ? (
-            <div
-              className="flex flex-col items-center gap-3 py-16"
-              role="status"
-              aria-live="polite"
-            >
+        {activeTab === 'products' ? (
+          <>
+            {deleteError && (
               <div
-                className="w-10 h-10 rounded-full border-4 border-[#FFC9D6] border-t-[#7A1333] animate-spin"
-                aria-hidden="true"
-              />
-              <p className="text-sm text-[#5A0B22]/75 font-medium">
-                Cargando productos…
-              </p>
-            </div>
-          ) : error ? (
-            <div
-              role="alert"
-              className="flex flex-col items-center gap-3 py-10 text-center bg-white/80 border border-[#B91C1C]/20 rounded-3xl p-6"
-            >
-              <AlertTriangle
-                size={28}
-                className="text-[#B91C1C]"
-                aria-hidden="true"
-              />
-              <p className="text-sm text-[#B91C1C] font-medium">
-                No pudimos cargar los productos.
-              </p>
-              <p className="text-xs text-[#5A0B22]/70 break-words">{error}</p>
-              <button
-                type="button"
-                onClick={fetchProducts}
-                className="min-h-[44px] inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-[#5A0B22] via-[#7A1333] to-[#5A0B22] text-white font-semibold text-sm shadow hover:shadow-lg transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5A0B22]"
+                role="alert"
+                className="flex items-start gap-2 bg-white/80 border border-[#B91C1C]/20 rounded-2xl p-4 text-sm text-[#B91C1C] font-medium"
               >
-                <RefreshCw size={18} className="text-[#F7E7B4]" aria-hidden="true" />
-                <span>Reintentar</span>
-              </button>
-            </div>
-          ) : products.length === 0 ? (
-            <div className="flex flex-col items-center gap-3 py-16 text-center bg-white/80 border border-[#5A0B22]/10 rounded-3xl p-6">
-              <div className="w-14 h-14 rounded-full bg-[#FFC9D6]/60 text-[#7A1333] flex items-center justify-center">
-                <Package size={26} aria-hidden="true" />
+                <AlertTriangle size={18} className="mt-0.5 shrink-0" aria-hidden="true" />
+                <span>{deleteError}</span>
               </div>
-              <p className="font-serif text-lg font-semibold">
-                Aún no hay productos
-              </p>
-              <p className="text-sm text-[#5A0B22]/75 leading-relaxed max-w-sm">
-                Cuando subas tu primer producto aparecerá acá y quedará visible en la
-                tienda.
-              </p>
-            </div>
-          ) : (
-            <ProductList
-              products={products}
-              onStockChange={handleStockChange}
-              onEdit={setEditingProduct}
-              onDelete={handleDelete}
-              deletingId={deletingId}
-            />
-          )}
-        </section>
+            )}
+
+            {/* Sección: crear o editar producto */}
+            {editingProduct ? (
+              <section aria-label="Formulario de edición">
+                <ProductForm
+                  key={editingProduct.id}
+                  product={editingProduct}
+                  onUpdated={() => {
+                    setEditingProduct(null);
+                    fetchProducts();
+                  }}
+                  onCancel={() => setEditingProduct(null)}
+                />
+              </section>
+            ) : (
+              <section aria-label="Crear producto">
+                <div className="flex items-center gap-2 mb-3">
+                  <ImagePlus size={20} className="text-[#D4AF37]" aria-hidden="true" />
+                  <h2 className="font-serif text-lg sm:text-xl font-semibold text-[#5A0B22]">
+                    Crear producto
+                  </h2>
+                </div>
+                <ProductForm onCreated={fetchProducts} />
+              </section>
+            )}
+
+            {/* Sección: catálogo */}
+            <section aria-labelledby="catalog-heading">
+              <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+                <div className="flex items-center gap-2">
+                  <Boxes size={20} className="text-[#D4AF37]" aria-hidden="true" />
+                  <h2
+                    id="catalog-heading"
+                    className="font-serif text-lg sm:text-xl font-semibold"
+                  >
+                    Mi catálogo
+                  </h2>
+                  <span className="text-sm text-[#5A0B22]/60 font-medium">
+                    (Productos)
+                  </span>
+                </div>
+                {!loading && !error && (
+                  <span className="inline-flex items-center min-h-[28px] px-3 rounded-full bg-[#FFC9D6]/60 text-[#7A1333] text-xs font-bold">
+                    {products.length} {products.length === 1 ? 'producto' : 'productos'}
+                  </span>
+                )}
+              </div>
+
+              {loading ? (
+                <div
+                  className="flex flex-col items-center gap-3 py-16"
+                  role="status"
+                  aria-live="polite"
+                >
+                  <div
+                    className="w-10 h-10 rounded-full border-4 border-[#FFC9D6] border-t-[#7A1333] animate-spin"
+                    aria-hidden="true"
+                  />
+                  <p className="text-sm text-[#5A0B22]/75 font-medium">
+                    Cargando productos…
+                  </p>
+                </div>
+              ) : error ? (
+                <div
+                  role="alert"
+                  className="flex flex-col items-center gap-3 py-10 text-center bg-white/80 border border-[#B91C1C]/20 rounded-3xl p-6"
+                >
+                  <AlertTriangle
+                    size={28}
+                    className="text-[#B91C1C]"
+                    aria-hidden="true"
+                  />
+                  <p className="text-sm text-[#B91C1C] font-medium">
+                    No pudimos cargar los productos.
+                  </p>
+                  <p className="text-xs text-[#5A0B22]/70 break-words">{error}</p>
+                  <button
+                    type="button"
+                    onClick={fetchProducts}
+                    className="min-h-[44px] inline-flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-[#5A0B22] via-[#7A1333] to-[#5A0B22] text-white font-semibold text-sm shadow hover:shadow-lg transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5A0B22]"
+                  >
+                    <RefreshCw size={18} className="text-[#F7E7B4]" aria-hidden="true" />
+                    <span>Reintentar</span>
+                  </button>
+                </div>
+              ) : products.length === 0 ? (
+                <div className="flex flex-col items-center gap-3 py-16 text-center bg-white/80 border border-[#5A0B22]/10 rounded-3xl p-6">
+                  <div className="w-14 h-14 rounded-full bg-[#FFC9D6]/60 text-[#7A1333] flex items-center justify-center">
+                    <Package size={26} aria-hidden="true" />
+                  </div>
+                  <p className="font-serif text-lg font-semibold">
+                    Aún no hay productos
+                  </p>
+                  <p className="text-sm text-[#5A0B22]/75 leading-relaxed max-w-sm">
+                    Cuando subas tu primer producto aparecerá acá y quedará visible en la
+                    tienda.
+                  </p>
+                </div>
+              ) : (
+                <ProductList
+                  products={products}
+                  onStockChange={handleStockChange}
+                  onEdit={setEditingProduct}
+                  onDelete={handleDelete}
+                  deletingId={deletingId}
+                />
+              )}
+            </section>
+          </>
+        ) : (
+          <TurnSettingsTab />
+        )}
       </main>
     </div>
   );
