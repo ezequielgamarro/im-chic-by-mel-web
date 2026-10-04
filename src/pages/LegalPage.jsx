@@ -26,8 +26,9 @@ const PAGE_CONFIG = {
   },
 };
 
-function LegalPage() {
-  const { page } = useParams();
+function LegalPage({ page: propPage }) {
+  const { page: paramPage } = useParams();
+  const page = propPage ?? paramPage;
   const config = PAGE_CONFIG[page];
 
   if (!config) {

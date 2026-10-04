@@ -45,6 +45,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                   <Route path="/mis-turnos" element={<MyAppointmentsPage />} />
                   <Route path="/mis-cursos" element={<MyCoursesPage />} />
                   <Route path="/legal/:page" element={<LegalPage />} />
+                  <Route path="/privacidad" element={<LegalPage page="privacidad" />} />
+                  <Route path="/terminos" element={<LegalPage page="terminos" />} />
+                  <Route path="/cookies" element={<LegalPage page="cookies" />} />
                   <Route
                     path="/admin"
                     element={
