@@ -6,7 +6,7 @@ Pestaña Servicios (/servicios, /inversion) = InversionPage.jsx con 3 categoría
 Specs 001–007 implementadas: 001 global/accesibilidad, 002 Navbar + TurnoModal centralizado, 003 buscador tienda, 004 heading-order tienda, 005 SEO/agentic, 006 inscripción por WhatsApp en /cursos, 007 Panel de Administración.
 /cursos: botón "Quiero Inscribirme Ahora" abre WhatsApp con curso + valor (Masterclass $65.000 / Formación Integral $130.000 por mes).
 TurnoModal: selector "Servicio a Realizar" con 10 opciones (solo Uñas, Cabello, Maquillaje).
-Navbar: solo CTA "Agenda tu turno". Footer: WhatsApp + Instagram en 5 rutas.
+Navbar: logo, links, barra de anuncios y botones auth (Ingresar/Panel Admin/perfil/Salir). Footer: WhatsApp + Instagram en 5 rutas.
 SEO: public/robots.txt, public/sitemap.xml y public/llms.txt. Validado: build OK; Lighthouse móvil 100/100/100/100 en /; Accessibility 100 en /servicios y /tienda.
 
 ## Spec 007 — Panel de Administración (IMPLEMENTADA, T1–T11 + catálogo migrado)
@@ -20,6 +20,13 @@ Notas: precio es-AR (Intl.NumberFormat); stock UPDATE optimista con rollback (T9
 Hallazgos menores opcionales: L4 imagen huérfana, L5 RPC atómico, L6 feedback no-admin. Sin pendientes críticos; lista para deploy.
 T13 (2026-10-02): botón "Eliminar" en ProductCard con confirmación (window.confirm), delete de fila + remove de Storage (ruta extraída de /object/public/productos/), estado "Eliminando…" y error con role=alert; lista se refresca con fetchProducts. Build OK.
 T14+T15 (2026-10-02): ProductForm con <select> de categoría (Cuidado de la Piel, Maquillaje, Labios, Accesorios, Productos; default "Productos"; precarga en edición) e INSERT/UPDATE con `category`; ProductCard muestra badge de categoría. /admin rediseñada (AdminPage): secciones Crear producto / Mi catálogo (Productos), header con Cerrar sesión, estados loading/error/vacío/edición preservados, móvil-first, AA. Build OK.
+
+## Spec 009 — Ajustes UI Navbar/Login/Perfil (IMPLEMENTADA, 2026-10-03)
+CTA "Agenda tu turno" eliminado de la Navbar (desktop y móvil) con limpieza de `handleOpenTurno`/`useTurno`/`Calendar`; flujo de turnos intacto (HomeServices/InversionPage + TurnoProvider). /login más compacto conservando 44px, labels y un solo h1. /cuenta sin campo "URL de avatar" y con label único `avatar-file` + sr-only. Build OK.
+
+## Spec 010 — Carrito global persistente, Favoritos y Mis Compras (IMPLEMENTADA, 2026-10-03)
+Carrito global `CartContext`+`useCart` con `CartDrawer` único en main.jsx, botón+badge en Navbar y pestañas en /cuenta (Mi Perfil/Mi Carrito/Favoritos/Mis Compras, tablist accesible). Invitado persiste en `imchic_cart`; logueado usa `public.cart_items` (upsert onConflict user_id,product_id) con marcador `imchic_cart_owner` y detección de espejo: al login no duplica UUID ya en remoto (los ausentes se seedean) y suma solo si es carrito de invitado genuino; el carrito completo queda en localStorage (no se recorta) → no hay doble conteo en login→logout→login ni en recarga, ni pérdida si falla el merge. Solo ids UUID a Supabase (ids numéricos del respaldo local-only). Favoritos requieren sesión (`favorites`, aviso role="status"+link a /login); checkout registra `orders`+`order_items` (snapshot) antes de abrir wa.me y NO vacía el carrito. Degradación grácil (`42P01`/`PGRST205`) con avisos role="status". `syncCart` eliminado de AuthContext.
+Migración `supabase/migrations/20261003120000_spec_010_favorites_orders.sql` **PENDIENTE de aplicación manual** (SQL Editor o `supabase db push`). Pendiente menor no bloqueante: botones auth del Navbar con `min-h-[34px]` (<44px).
 
 ## Decisiones arquitectónicas
 - SDD obligatorio: leer docs/constitution.md y documentar spec + plan antes de tocar .jsx.

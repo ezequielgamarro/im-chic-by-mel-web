@@ -50,8 +50,8 @@ function LegalPage() {
   const Component = config.component;
 
   return (
-    <div className="min-h-screen bg-[#FFF0F3] text-[#5A0B22] font-sans">
-      <header className="sticky top-0 z-10 bg-[#FFF8FA]/95 backdrop-blur border-b border-[#D87F95]/30">
+    <div className="premium-page min-h-screen bg-[#FFF0F3] text-[#5A0B22] font-sans">
+      <header className="premium-header sticky top-0 z-10">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
           <Link to="/" className="min-h-[44px] inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-[#5A0B22]/15 text-[#5A0B22] font-semibold text-sm hover:bg-[#FFC9D6]/30 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5A0B22]">
             <ArrowLeft size={18} className="text-[#7A1333]" aria-hidden="true" />
@@ -75,7 +75,7 @@ function LegalPage() {
         </header>
 
         {/* Contenido legal */}
-        <article className="bg-white/90 border border-[#5A0B22]/10 rounded-3xl shadow-xl p-6 sm:p-8 prose prose-[#5A0B22] max-w-none">
+        <article className="premium-card p-6 sm:p-8 prose prose-[#5A0B22] max-w-none">
           <React.Fragment>
             <config.component />
           </React.Fragment>

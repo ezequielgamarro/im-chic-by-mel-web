@@ -145,8 +145,8 @@ export default function AdminPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#FFF0F3] text-[#5A0B22] font-sans">
-      <header className="sticky top-0 z-10 bg-[#FFF8FA]/95 backdrop-blur border-b border-[#D87F95]/30">
+    <div className="premium-page min-h-screen bg-[#FFF0F3] text-[#5A0B22] font-sans">
+      <header className="premium-header sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="font-script text-lg leading-none text-[#7A1333]">
@@ -158,7 +158,7 @@ export default function AdminPage() {
           </div>
           
           {/* Tab Navigation */}
-          <nav className="flex gap-1 bg-white/80 rounded-xl p-1 border border-[#D87F95]/30" aria-label="Secciones del panel">
+          <nav className="premium-card-soft flex gap-1 p-1" aria-label="Secciones del panel">
             <button
               type="button"
               onClick={() => setActiveTab('products')}

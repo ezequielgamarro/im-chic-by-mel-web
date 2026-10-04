@@ -42,7 +42,7 @@ function AppointmentCard({ appointment, onCancel }) {
   ) : null;
 
   return (
-    <div key={appointment.id} className="bg-white/90 border border-[#5A0B22]/10 rounded-3xl shadow-xl p-6 space-y-4">
+    <div key={appointment.id} className="premium-card-soft p-6 space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h3 className="font-serif text-lg font-semibold text-[#5A0B22]">{formatServiceName(appointment.service_key || appointment.service)}</h3>
         <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${status.color}`}>
@@ -140,7 +140,7 @@ function MyAppointmentsPage() {
     const StatusIcon = status.icon;
 
     return (
-      <div key={apt.id} className="bg-white/90 border border-[#5A0B22]/10 rounded-3xl shadow-xl p-6 space-y-4">
+      <div key={apt.id} className="premium-card-soft p-6 space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h3 className="font-serif text-lg font-semibold text-[#5A0B22]">{formatServiceName(apt.service_key || apt.service)}</h3>
           <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${status.color}`}>
@@ -198,8 +198,8 @@ function MyAppointmentsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FFF0F3] text-[#5A0B22] font-sans">
-      <header className="sticky top-0 z-10 bg-[#FFF8FA]/95 backdrop-blur border-b border-[#D87F95]/30">
+    <div className="premium-page min-h-screen bg-[#FFF0F3] text-[#5A0B22] font-sans">
+      <header className="premium-header sticky top-0 z-10">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="font-script text-lg leading-none text-[#7A1333]">Im Chic by Mel</p>
@@ -236,7 +236,7 @@ function MyAppointmentsPage() {
               const StatusIcon = status.icon;
 
               return (
-                <div key={apt.id} className="bg-white/90 border border-[#5A0B22]/10 rounded-3xl shadow-xl p-6 space-y-4">
+                <div key={apt.id} className="premium-card-soft p-6 space-y-4">
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <h3 className="font-serif text-lg font-semibold text-[#5A0B22]">{formatServiceName(apt.service_key || apt.service)}</h3>
                     <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold ${status.color}`}>

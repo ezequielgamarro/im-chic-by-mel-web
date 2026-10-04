@@ -87,8 +87,8 @@ function ResetPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFF0F3] text-[#5A0B22] font-sans flex items-center justify-center p-6">
-      <main className="w-full max-w-md bg-white/90 border border-[#5A0B22]/10 rounded-3xl shadow-xl p-6 sm:p-8">
+    <div className="premium-page min-h-screen bg-[#FFF0F3] text-[#5A0B22] font-sans flex items-center justify-center p-6">
+      <main className="premium-card animate-fade-up w-full max-w-md p-6 sm:p-8">
         <header className="text-center mb-6">
           <div className="w-14 h-14 rounded-full bg-[#FFC9D6]/60 text-[#7A1333] flex items-center justify-center mx-auto mb-4">
             {step === 'request' ? (

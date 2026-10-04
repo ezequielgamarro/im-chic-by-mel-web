@@ -12,7 +12,7 @@ const AuthContext = createContext(null);
 
 /**
  * Provee autenticación global (sesión + rol admin) a toda la app.
- * Uso: const { session, user, isAdmin, loading, signIn, signOut, register, updateProfile, syncCart } = useAuth();
+ * Uso: const { session, user, isAdmin, loading, signIn, signOut, register, updateProfile } = useAuth();
  *
  * - `isAdmin` se deriva del claim `app_metadata.role === 'admin'` (definido en el
  *   JWT por Supabase Auth). La autorización real la impone RLS en el backend;
@@ -100,42 +100,6 @@ export function AuthProvider({ children }) {
     return data;
   }, []);
 
-  // --- Cart sync ---
-  const syncCart = useCallback(async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) return;
-
-    const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
-    if (localCart.length === 0) return;
-
-    // Merge localStorage cart with Supabase cart_items
-    for (const item of localCart) {
-      const { data: existing } = await supabase
-        .from('cart_items')
-        .select('quantity')
-        .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
-        .eq('product_id', item.id)
-        .single();
-
-      if (existing) {
-        await supabase
-          .from('cart_items')
-          .update({ quantity: existing.quantity + (item.quantity || 1) })
-          .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
-          .eq('product_id', item.id);
-      } else {
-        await supabase.from('cart_items').insert({
-          user_id: (await supabase.auth.getUser()).data.user?.id,
-          product_id: item.id,
-          quantity: item.quantity || 1,
-        });
-      }
-    }
-
-    // Clear localStorage after successful sync
-    localStorage.removeItem('cart');
-  }, []);
-
   const user = session?.user ?? null;
   const isAdmin = user?.app_metadata?.role === 'admin';
 
@@ -150,7 +114,6 @@ export function AuthProvider({ children }) {
       signOut,
       register,
       updateProfile,
-      syncCart,
     }),
     [session, user, isAdmin, loading]
   );

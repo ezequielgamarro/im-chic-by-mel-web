@@ -20,15 +20,17 @@ import {
   Star,
   Gift,
   ShoppingCart,
-  Trash2,
   Search,
-  Plus,
-  Minus
+  Heart
 } from 'lucide-react';
 import WhatsAppButton from './src/components/WhatsAppButton';
 import SparkleButton from './src/components/SparkleButton';
 import InstagramButton from './src/components/InstagramButton';
 import { supabase } from './src/lib/supabase';
+import { useCart } from './src/context/CartContext';
+import { useFavorites } from './src/context/FavoritesContext';
+import { useAuth } from './src/context/AuthContext';
+import { formatPrice } from './src/lib/format';
 
 // Imágenes de Productos Mary Kay
 import imgTwAvanzado from './src/assets/img/Productos/img-TW-avanzado.jpg';
@@ -415,17 +417,12 @@ const fallbackProducts = [
   },
 ];
 
-// Helper de formato de moneda
-const formatPrice = (price) => {
-  return new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(price);
-};
-
 // Mapea una fila de Supabase (tabla `products`) a la forma que espera la tienda.
 // Columnas de Supabase: id, title, price, description, image_url, stock.
 // No existen `category`, `icon` ni `badge` en Supabase; usamos valores neutros
 // por defecto para mantener intactos los filtros y placeholders de la UI.
 // Deriva el ícono del producto desde su categoría.
-const iconForCategory = (category) => {
+export const iconForCategory = (category) => {
   switch (category) {
     case 'Cuidado de la Piel': return Droplets;
     case 'Maquillaje': return Palette;
@@ -435,7 +432,7 @@ const iconForCategory = (category) => {
   }
 };
 
-const mapProduct = (row) => ({
+export const mapProduct = (row) => ({
   id: row.id,
   name: row.title,
   category: row.category || 'Productos',
@@ -451,10 +448,20 @@ const mapProduct = (row) => ({
  * Componente ProductCard
  * Tarjeta de producto con toggle interactivo 'Ver más... / Ver menos' para la descripción
  */
-function ProductCard({ product, addToCart, formatPrice }) {
+function ProductCard({ product, addToCart, formatPrice, isFavorite, onToggleFavorite, isAuthenticated }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [showAuthNotice, setShowAuthNotice] = useState(false);
   const Icon = product.icon;
   const isLongDescription = product.description && product.description.length > 80;
+
+  const handleToggleFavorite = () => {
+    if (!isAuthenticated) {
+      setShowAuthNotice(true);
+      return;
+    }
+    setShowAuthNotice(false);
+    onToggleFavorite?.();
+  };
 
   return (
     <motion.div
@@ -478,6 +485,20 @@ function ProductCard({ product, addToCart, formatPrice }) {
             {product.badge}
           </div>
         )}
+
+        {/* Botón de favoritos */}
+        <button
+          type="button"
+          onClick={handleToggleFavorite}
+          aria-pressed={Boolean(isFavorite)}
+          aria-label={isFavorite ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+          className="absolute top-2.5 right-2.5 w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full bg-white/90 backdrop-blur-sm shadow-md border border-[#FFC9D6]/60 text-[#7A1333] hover:bg-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7A1333]"
+        >
+          <Heart
+            className={`w-5 h-5 transition-colors ${isFavorite ? 'fill-current text-[#E0457B]' : ''}`}
+            aria-hidden="true"
+          />
+        </button>
       </div>
 
       <div className="flex-1 flex flex-col justify-between">
@@ -527,6 +548,15 @@ function ProductCard({ product, addToCart, formatPrice }) {
           <ShoppingCart className="w-4 h-4" />
           <span>Agregar al carrito</span>
         </button>
+
+        {showAuthNotice && (
+          <p role="status" className="mt-3 text-xs text-[#7A1333] bg-[#FFF0F3] border border-[#FFC9D6]/60 rounded-xl px-3 py-2">
+            Iniciá sesión para guardar favoritos.{' '}
+            <Link to="/login" className="font-bold underline hover:text-[#5A0B22]">
+              Iniciar sesión
+            </Link>
+          </p>
+        )}
       </div>
     </motion.div>
   );
@@ -536,11 +566,15 @@ export default function MaryKayStore() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState('Todos');
   const [searchQuery, setSearchQuery] = useState('');
-  const [cart, setCart] = useState([]);
-  const [isCartOpen, setIsCartOpen] = useState(false);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
+
+  // Carrito global (Spec 010): el estado y el drawer viven en CartContext.
+  const { addToCart, openCart, itemCount } = useCart();
+  // Favoritos (Spec 010 T8).
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const { user } = useAuth();
 
   // Carga el catálogo desde Supabase. Si está vacío o falla, cae al catálogo de
   // respaldo para no romper la tienda (estabilidad estructural).
@@ -580,57 +614,6 @@ export default function MaryKayStore() {
 
   const whatsappNumber = "5493813553492";
 
-  // Lógica del Carrito
-  const addToCart = (product) => {
-    setCart((prevCart) => {
-      const existingItem = prevCart.find((item) => item.id === product.id);
-      if (existingItem) {
-        return prevCart.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-      }
-      return [...prevCart, { ...product, quantity: 1 }];
-    });
-    setIsCartOpen(true);
-  };
-
-  const removeFromCart = (productId) => {
-    setCart((prev) => prev.filter((item) => item.id !== productId));
-  };
-
-  const updateQuantity = (productId, delta) => {
-    setCart((prev) => prev.map((item) => {
-      if (item.id === productId) {
-        const newQuantity = Math.max(1, item.quantity + delta);
-        return { ...item, quantity: newQuantity };
-      }
-      return item;
-    }));
-  };
-
-  const cartTotal = useMemo(() => {
-    return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
-  }, [cart]);
-
-  const cartItemCount = useMemo(() => {
-    return cart.reduce((count, item) => count + item.quantity, 0);
-  }, [cart]);
-
-  const generateWhatsAppCheckoutLink = () => {
-    if (cart.length === 0) return `https://wa.me/${whatsappNumber}`;
-
-    let message = `¡Hola Melany! Te escribo desde tu tienda web. Quiero realizar el siguiente pedido:\n\n`;
-
-    cart.forEach((item, index) => {
-      message += `${index + 1}. *${item.name}* (x${item.quantity}) - ${formatPrice(item.price * item.quantity)}\n`;
-    });
-
-    message += `\n*Total estimado:* ${formatPrice(cartTotal)}\n\n`;
-    message += `Por favor, confirmame disponibilidad y métodos de pago. ¡Gracias!`;
-
-    return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-  };
-
   // Animaciones
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -669,119 +652,27 @@ export default function MaryKayStore() {
   return (
     <div className="min-h-screen bg-[#FFF0F3] text-[#5A0B22] font-sans selection:bg-[#5A0B22] selection:text-white relative overflow-x-hidden">
 
-      {/* Sidebar del Carrito */}
-      <AnimatePresence>
-        {isCartOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsCartOpen(false)}
-              className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[100]"
-            />
-            <motion.div
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 h-full w-full max-w-md bg-white z-[101] shadow-2xl flex flex-col border-l border-[#5A0B22]/10"
-            >
-              <div className="flex items-center justify-between p-6 border-b border-[#FFF0F3]">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-[#FFF0F3] flex items-center justify-center text-[#5A0B22]">
-                    <ShoppingBag className="w-5 h-5" />
-                  </div>
-                  <h2 className="font-serif text-2xl font-bold text-[#5A0B22]">Tu Pedido</h2>
-                </div>
-                <button
-                  onClick={() => setIsCartOpen(false)}
-                  className="p-2 hover:bg-[#FFF0F3] rounded-full transition-colors text-[#5A0B22]"
-                >
-                  <X className="w-6 h-6" />
-                </button>
-              </div>
-
-              <div className="flex-1 overflow-y-auto p-6 space-y-4">
-                {cart.length === 0 ? (
-                  <div className="h-full flex flex-col items-center justify-center text-center opacity-60">
-                    <ShoppingCart className="w-16 h-16 mb-4 text-[#7A1333]" />
-                    <p className="font-medium text-lg">Tu carrito está vacío</p>
-                    <p className="text-sm">Agrega productos para armar tu pedido.</p>
-                  </div>
-                ) : (
-                  cart.map((item) => (
-                    <div key={item.id} className="flex gap-4 p-4 bg-[#FFF0F3]/50 rounded-2xl border border-[#FFC9D6]/30">
-                      <div className="w-20 h-20 bg-white rounded-xl overflow-hidden flex-shrink-0 p-2 shadow-sm">
-                        <ImageWithFallback src={item.image} alt={item.name} className="w-full h-full object-contain" placeholderLabel="Item" />
-                      </div>
-                      <div className="flex-1 flex flex-col justify-between">
-                        <div>
-                          <h4 className="font-bold text-[#5A0B22] leading-tight text-sm mb-1 line-clamp-2">{item.name}</h4>
-                          <p className="text-[#7A1333] font-bold text-sm">{formatPrice(item.price)}</p>
-                        </div>
-                        <div className="flex items-center justify-between mt-2">
-                          <div className="flex items-center bg-white rounded-lg border border-[#FFC9D6] overflow-hidden">
-                            <button onClick={() => updateQuantity(item.id, -1)} className="px-2 py-1 hover:bg-[#FFF0F3] text-[#5A0B22] transition-colors"><Minus className="w-3.5 h-3.5" /></button>
-                            <span className="px-2 text-xs font-bold min-w-[24px] text-center">{item.quantity}</span>
-                            <button onClick={() => updateQuantity(item.id, 1)} className="px-2 py-1 hover:bg-[#FFF0F3] text-[#5A0B22] transition-colors"><Plus className="w-3.5 h-3.5" /></button>
-                          </div>
-                          <button onClick={() => removeFromCart(item.id)} className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-
-              {cart.length > 0 && (
-                <div className="p-6 bg-white border-t border-[#FFF0F3] shadow-[0_-10px_40px_rgba(0,0,0,0.05)]">
-                  <div className="flex justify-between items-center mb-6">
-                    <span className="text-[#5A0B22]/70 font-medium">Total Estimado</span>
-                    <span className="font-serif text-3xl font-bold text-[#5A0B22]">{formatPrice(cartTotal)}</span>
-                  </div>
-                  <a
-                    href={generateWhatsAppCheckoutLink()}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => setIsCartOpen(false)}
-                    className="w-full py-4 rounded-2xl bg-[#5A0B22] hover:bg-[#7A1333] text-white font-bold transition-colors flex items-center justify-center gap-2 shadow-lg shadow-[#5A0B22]/20 group"
-                  >
-                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
-                    </svg>
-                    <span>Enviar Pedido por WhatsApp</span>
-                  </a>
-                </div>
-              )}
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-
       {/* Floating Cart Button */}
       <motion.button
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        onClick={() => setIsCartOpen(true)}
-        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 w-13 h-13 sm:w-16 sm:h-16 bg-[#5A0B22] rounded-full shadow-[0_10px_30px_rgba(90,11,34,0.4)] flex items-center justify-center text-white border-2 border-white/20 transition-all cursor-pointer"
+        onClick={openCart}
+        className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 w-14 h-14 sm:w-16 sm:h-16 bg-[#5A0B22] rounded-full shadow-[0_10px_30px_rgba(90,11,34,0.4)] flex items-center justify-center text-white border-2 border-white/20 transition-all cursor-pointer"
         aria-label="Abrir carrito de compras"
       >
         <div className="relative">
           <ShoppingBag className="w-6 h-6 sm:w-7 sm:h-7" />
           <AnimatePresence>
-            {cartItemCount > 0 && (
+            {itemCount > 0 && (
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 exit={{ scale: 0 }}
                 className="absolute -top-2 -right-3 min-w-[22px] h-[22px] bg-[#D4AF37] text-[#5A0B22] rounded-full text-xs font-bold flex items-center justify-center px-1.5 shadow-sm border-2 border-[#5A0B22]"
               >
-                {cartItemCount}
+                {itemCount}
               </motion.div>
             )}
           </AnimatePresence>
@@ -942,6 +833,9 @@ export default function MaryKayStore() {
                     product={product}
                     addToCart={addToCart}
                     formatPrice={formatPrice}
+                    isFavorite={isFavorite(product.id)}
+                    onToggleFavorite={() => toggleFavorite(product)}
+                    isAuthenticated={Boolean(user)}
                   />
                 ))}
               </AnimatePresence>

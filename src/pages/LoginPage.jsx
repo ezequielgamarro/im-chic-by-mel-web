@@ -67,22 +67,23 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFF0F3] text-[#5A0B22] font-sans flex items-center justify-center p-6">
-      <main className="w-full max-w-md bg-white/90 border border-[#5A0B22]/10 rounded-3xl shadow-xl p-6 sm:p-8">
-        <header className="text-center mb-6">
-          <div className="w-14 h-14 rounded-full bg-[#FFC9D6]/60 text-[#7A1333] flex items-center justify-center mx-auto mb-4">
-            <LogIn size={26} aria-hidden="true" />
+    <div className="premium-page min-h-screen bg-[#FFF0F3] text-[#5A0B22] font-sans flex items-center justify-center p-6">
+      <main className="premium-card animate-fade-up w-full max-w-sm p-5 sm:p-6">
+        <header className="text-center mb-4">
+          <span className="premium-chip mb-3">Acceso</span>
+          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#FFC9D6] to-[#F8B4C4] text-[#7A1333] flex items-center justify-center mx-auto mb-3 animate-float ring-1 ring-[#D4AF37]/50 shadow-lg">
+            <LogIn size={22} aria-hidden="true" />
           </div>
-          <h1 className="font-serif text-2xl sm:text-3xl font-bold mb-2">
+          <h1 className="font-serif text-xl sm:text-2xl font-bold mb-1.5">
             Panel de Administración
           </h1>
-          <p className="text-sm text-[#5A0B22]/75 leading-relaxed">
+          <p className="text-xs sm:text-sm text-[#5A0B22]/75 leading-relaxed">
             Ingresá con tu email y contraseña para gestionar los productos de la
             tienda.
           </p>
         </header>
 
-        <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-3.5">
           <div className="flex flex-col gap-1.5">
             <label
               htmlFor="email"
@@ -179,14 +180,10 @@ export default function LoginPage() {
         </form>
 
         {/* Separador + Google */}
-        <div className="flex items-center gap-3 my-5">
-          <span className="flex-1 h-px bg-[#5A0B22]/15" aria-hidden="true" />
-          <span className="text-xs font-semibold uppercase tracking-wider text-[#5A0B22]/50">o</span>
-          <span className="flex-1 h-px bg-[#5A0B22]/15" aria-hidden="true" />
-        </div>
+        <div className="premium-or my-4">o</div>
         <GoogleButton label="Continuar con Google" />
 
-        <p className="text-center text-sm text-[#5A0B22]/60 mt-6">
+        <p className="text-center text-sm text-[#5A0B22]/60 mt-5">
           ¿No tenés cuenta? <Link to="/registro" className="font-semibold underline hover:text-[#7A1333]">Registrarse</Link>
         </p>
       </main>

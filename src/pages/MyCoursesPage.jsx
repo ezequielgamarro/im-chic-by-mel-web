@@ -73,8 +73,8 @@ function MyCoursesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FFF0F3] text-[#5A0B22] font-sans">
-      <header className="sticky top-0 z-10 bg-[#FFF8FA]/95 backdrop-blur border-b border-[#D87F95]/30">
+    <div className="premium-page min-h-screen bg-[#FFF0F3] text-[#5A0B22] font-sans">
+      <header className="premium-header sticky top-0 z-10">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="font-script text-lg leading-none text-[#7A1333]">Im Chic by Mel</p>
@@ -116,7 +116,7 @@ function MyCoursesPage() {
               return (
                 <article
                   key={course.id}
-                  className="bg-white/90 border border-[#5A0B22]/10 rounded-3xl shadow-xl p-6 space-y-4"
+                  className="premium-card-soft p-6 space-y-4"
                 >
                   <div className="flex flex-wrap items-center justify-between gap-2">
                     <h3 className="font-serif text-lg font-semibold text-[#5A0B22]">{courseLabel}</h3>

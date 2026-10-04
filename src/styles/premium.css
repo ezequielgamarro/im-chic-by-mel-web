@@ -1,0 +1,278 @@
+/* ============================================================================
+   Premium UI layer — Im Chic by Mel
+   Mantiene EXACTAMENTE la paleta de marca y no altera funcionalidad.
+   Solo agrega: texturas, sombras, bordes, animaciones y micro-interacciones.
+   ============================================================================ */
+
+:root {
+  --brand-pink: #ffc9d6;
+  --brand-pink-light: #fff0f3;
+  --brand-pink-lighter: #fff8fa;
+  --brand-pink-deep: #f8b4c4;
+  --brand-burgundy: #5a0b22;
+  --brand-burgundy-dark: #3f0516;
+  --brand-burgundy-light: #7a1333;
+  --brand-gold: #d4af37;
+  --brand-gold-light: #f7e7b4;
+  --premium-shadow: 0 30px 60px -30px rgba(90, 11, 34, 0.42), 0 10px 28px -16px rgba(90, 11, 34, 0.22);
+  --premium-shadow-soft: 0 18px 40px -24px rgba(90, 11, 34, 0.3), 0 6px 16px -10px rgba(90, 11, 34, 0.16);
+  --premium-ring: rgba(212, 175, 55, 0.55);
+}
+
+/* ── Selección y scrollbar de marca ─────────────────────────────────────── */
+::selection {
+  background: var(--brand-burgundy);
+  color: var(--brand-gold-light);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--brand-burgundy-light) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--brand-burgundy-light), var(--brand-burgundy));
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--brand-burgundy), var(--brand-burgundy-dark));
+  background-clip: padding-box;
+}
+
+/* ── Fondo premium con halos de marca (decorativo, no bloquea clics) ─────── */
+.premium-page {
+  position: relative;
+  isolation: isolate;
+}
+.premium-page::before,
+.premium-page::after {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  border-radius: 9999px;
+  filter: blur(90px);
+  opacity: 0.55;
+  pointer-events: none;
+}
+.premium-page::before {
+  width: 42vw;
+  height: 42vw;
+  top: -12vw;
+  right: -10vw;
+  background: radial-gradient(circle at center, var(--brand-pink-deep), transparent 70%);
+  animation: premium-drift 18s ease-in-out infinite alternate;
+}
+.premium-page::after {
+  width: 38vw;
+  height: 38vw;
+  bottom: -14vw;
+  left: -10vw;
+  background: radial-gradient(circle at center, var(--brand-gold-light), transparent 70%);
+  opacity: 0.35;
+  animation: premium-drift 22s ease-in-out infinite alternate-reverse;
+}
+
+/* ── Tarjeta premium (glass + borde dorado) ─────────────────────────────── */
+.premium-card {
+  position: relative;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.94), rgba(255, 248, 250, 0.88));
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(90, 11, 34, 0.1);
+  border-radius: 1.75rem;
+  box-shadow: var(--premium-shadow);
+}
+.premium-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.75), rgba(255, 201, 214, 0.35) 45%, rgba(90, 11, 34, 0.25));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.premium-card-soft {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(90, 11, 34, 0.1);
+  border-radius: 1.5rem;
+  box-shadow: var(--premium-shadow-soft);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+}
+.premium-card-soft:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--premium-shadow);
+  border-color: rgba(212, 175, 55, 0.5);
+}
+
+/* ── Botón premium (brillo dorado al pasar) ─────────────────────────────── */
+.premium-btn {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.premium-btn::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(100deg, transparent, rgba(247, 231, 180, 0.55), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+.premium-btn:hover::after {
+  left: 140%;
+}
+
+/* ── Línea decorativa dorada ────────────────────────────────────────────── */
+.gold-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--brand-gold), transparent);
+}
+.gold-text {
+  background: linear-gradient(120deg, var(--brand-gold), var(--brand-gold-light) 45%, var(--brand-gold));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ── Etiqueta / chip premium ────────────────────────────────────────────── */
+.premium-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.85rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(255, 201, 214, 0.55), rgba(247, 231, 180, 0.35));
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  color: var(--brand-burgundy-light);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* ── Animaciones ────────────────────────────────────────────────────────── */
+@keyframes premium-fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes premium-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes premium-scale-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes premium-drift {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to { transform: translate3d(-4%, 5%, 0) scale(1.12); }
+}
+@keyframes premium-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes premium-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+  50% { box-shadow: 0 0 26px 6px rgba(212, 175, 55, 0.25); }
+}
+@keyframes premium-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-fade-up { animation: premium-fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.animate-fade-in { animation: premium-fade-in 0.8s ease both; }
+.animate-scale-in { animation: premium-scale-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.animate-float { animation: premium-float 6s ease-in-out infinite; }
+.animate-glow { animation: premium-glow 3.2s ease-in-out infinite; }
+
+.delay-75 { animation-delay: 0.075s; }
+.delay-150 { animation-delay: 0.15s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-500 { animation-delay: 0.5s; }
+
+/* ── Divisor de texto "o" ───────────────────────────────────────────────── */
+.premium-or {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  color: rgba(90, 11, 34, 0.5);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.premium-or::before,
+.premium-or::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(90, 11, 34, 0.25), transparent);
+}
+
+/* ── Inputs premium ─────────────────────────────────────────────────────── */
+.premium-input {
+  transition: box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease, transform 0.3s ease;
+}
+.premium-input:focus {
+  box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.2);
+}
+
+/* ── Encabezado premium con brillo sutil ────────────────────────────────── */
+.premium-header {
+  background: linear-gradient(180deg, rgba(255, 248, 250, 0.96), rgba(255, 240, 243, 0.82));
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.28);
+  box-shadow: 0 12px 30px -22px rgba(90, 11, 34, 0.35);
+}
+
+/* ── Sección/pestaña activa premium ─────────────────────────────────────── */
+.premium-tab-active {
+  box-shadow: 0 12px 26px -14px rgba(90, 11, 34, 0.55), inset 0 0 0 1px rgba(212, 175, 55, 0.35);
+}
+
+/* ── Badge/insignia flotante ────────────────────────────────────────────── */
+.premium-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--brand-burgundy-light), var(--brand-burgundy));
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  box-shadow: 0 6px 14px -6px rgba(90, 11, 34, 0.6);
+}
+
+/* ── Respeta preferencia de movimiento reducido ─────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up,
+  .animate-fade-in,
+  .animate-scale-in,
+  .animate-float,
+  .animate-glow,
+  .premium-page::before,
+  .premium-page::after {
+    animation: none !important;
+  }
+}

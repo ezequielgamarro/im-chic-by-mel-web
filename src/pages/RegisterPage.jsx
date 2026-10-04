@@ -103,17 +103,17 @@ function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FFF0F3] text-[#5A0B22] font-sans flex items-center justify-center p-6">
-      <main className="w-full max-w-md bg-white/90 border border-[#5A0B22]/10 rounded-3xl shadow-xl p-6 sm:p-8">
+    <div className="premium-page min-h-screen bg-[#FFF0F3] text-[#5A0B22] font-sans flex items-center justify-center p-6">
+      <main className="premium-card animate-fade-up w-full max-w-md p-6 sm:p-8">
         <header className="text-center mb-6">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFC9D6]/60 border border-[#D87F95]/30 text-[#7A1333] text-xs font-bold uppercase tracking-wider mb-2">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FFC9D6]/60 border border-[#D87F95]/30 text-[#7A1333] text-xs font-bold uppercase tracking-wider mb-3">
             <UserPlus size={14} className="text-[#D4AF37]" aria-hidden="true" />
             <span>Crear Cuenta</span>
           </div>
           <h1 className="font-serif text-2xl sm:text-3xl font-bold text-[#5A0B22]">
             Creá tu cuenta
           </h1>
-          <p className="text-sm text-[#5A0B22]/75 leading-relaxed mt-1 max-w-sm mx-auto">
+          <p className="text-sm text-[#5A0B22]/75 leading-relaxed mt-2 max-w-sm mx-auto">
             Registrate para guardar tu carrito, ver tu historial de turnos y cursos, y agendar turnos con disponibilidad en tiempo real.
           </p>
         </header>
@@ -298,11 +298,7 @@ function RegisterPage() {
         </form>
 
         {/* Separador + Google */}
-        <div className="flex items-center gap-3 my-5">
-          <span className="flex-1 h-px bg-[#5A0B22]/15" aria-hidden="true" />
-          <span className="text-xs font-semibold uppercase tracking-wider text-[#5A0B22]/50">o</span>
-          <span className="flex-1 h-px bg-[#5A0B22]/15" aria-hidden="true" />
-        </div>
+        <div className="premium-or my-5">o</div>
         <GoogleButton label="Registrarse con Google" />
       </main>
     </div>

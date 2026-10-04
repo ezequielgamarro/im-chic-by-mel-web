@@ -1,9 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import './styles/premium.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import ErrorBoundary from './components/ErrorBoundary';
 import { TurnoProvider } from './context/TurnoContext';
 import { AuthProvider } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
+import { FavoritesProvider } from './context/FavoritesContext';
+import CartDrawer from './components/CartDrawer';
 import ImChicLanding from '../ImChicLanding.jsx';
 import MaryKayStore from '../MaryKayStore.jsx';
 import HomeServices from '../HomeServices.jsx';
@@ -24,31 +28,36 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <ErrorBoundary>
       <BrowserRouter>
         <AuthProvider>
-          <TurnoProvider>
-            <Routes>
-              <Route path="/" element={<HomeServices />} />
-              <Route path="/cursos" element={<ImChicLanding />} />
-              <Route path="/tienda" element={<MaryKayStore />} />
-              <Route path="/servicios" element={<InversionPage />} />
-              <Route path="/inversion" element={<InversionPage />} />
-              <Route path="/contacto" element={<ContactoPage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/registro" element={<RegisterPage />} />
-              <Route path="/reset-password" element={<ResetPasswordPage />} />
-              <Route path="/cuenta" element={<AccountPage />} />
-              <Route path="/mis-turnos" element={<MyAppointmentsPage />} />
-              <Route path="/mis-cursos" element={<MyCoursesPage />} />
-              <Route path="/legal/:page" element={<LegalPage />} />
-              <Route
-                path="/admin"
-                element={
-                  <ProtectedRoute>
-                    <AdminPage />
-                  </ProtectedRoute>
-                }
-              />
-            </Routes>
-          </TurnoProvider>
+          <CartProvider>
+            <FavoritesProvider>
+              <TurnoProvider>
+                <Routes>
+                  <Route path="/" element={<HomeServices />} />
+                  <Route path="/cursos" element={<ImChicLanding />} />
+                  <Route path="/tienda" element={<MaryKayStore />} />
+                  <Route path="/servicios" element={<InversionPage />} />
+                  <Route path="/inversion" element={<InversionPage />} />
+                  <Route path="/contacto" element={<ContactoPage />} />
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/registro" element={<RegisterPage />} />
+                  <Route path="/reset-password" element={<ResetPasswordPage />} />
+                  <Route path="/cuenta" element={<AccountPage />} />
+                  <Route path="/mis-turnos" element={<MyAppointmentsPage />} />
+                  <Route path="/mis-cursos" element={<MyCoursesPage />} />
+                  <Route path="/legal/:page" element={<LegalPage />} />
+                  <Route
+                    path="/admin"
+                    element={
+                      <ProtectedRoute>
+                        <AdminPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                </Routes>
+                <CartDrawer />
+              </TurnoProvider>
+            </FavoritesProvider>
+          </CartProvider>
         </AuthProvider>
       </BrowserRouter>
     </ErrorBoundary>

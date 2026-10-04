@@ -173,7 +173,7 @@ export default function TurnosTab() {
             return (
               <li
                 key={apt.id}
-                className="bg-white/90 border border-[#5A0B22]/10 rounded-3xl shadow-sm p-5 flex flex-col gap-3"
+                className="premium-card-soft p-5 flex flex-col gap-3"
               >
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <div>

@@ -527,7 +527,7 @@ function TurnoModalEnhanced({ isOpen, onClose, initialService = '' }) {
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
       <div className="fixed inset-0 bg-[#5A0B22]/60 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
       
-      <div className="relative w-full max-w-lg bg-gradient-to-b from-white via-[#FFF0F3]/40 to-white rounded-3xl shadow-2xl border border-white/80 p-6 sm:p-8 z-10 my-8 overflow-hidden max-h-[90vh] overflow-y-auto">
+      <div className="premium-card animate-scale-in relative w-full max-w-lg p-6 sm:p-8 z-10 my-8 overflow-hidden max-h-[90vh] overflow-y-auto">
         <button onClick={onClose} aria-label="Cerrar modal" className="absolute top-5 right-5 w-9 h-9 rounded-full bg-[#FFF0F3] hover:bg-[#FFC9D6] text-[#5A0B22] flex items-center justify-center transition-colors shadow-sm">
           <X size={18} />
         </button>

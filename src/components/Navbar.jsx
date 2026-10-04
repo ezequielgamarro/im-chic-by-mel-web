@@ -1,16 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Calendar, ChevronRight, User, LogIn, UserPlus, LogOut } from 'lucide-react';
-import { useTurno } from '../context/TurnoContext';
+import { Menu, X, ChevronRight, User, LogIn, UserPlus, LogOut, ShoppingCart } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
-  const { open: openTurno } = useTurno();
   const { user, isAdmin, signOut } = useAuth();
+  const { openCart, itemCount } = useCart();
   const menuButtonRef = useRef(null);
+
+  const cartAriaLabel = `Abrir carrito, ${itemCount} producto${itemCount === 1 ? '' : 's'}`;
 
   const navLinks = [
     { path: '/', label: 'Inicio' },
@@ -42,11 +44,6 @@ export default function Navbar() {
       document.body.style.overflow = previousOverflow;
     };
   }, [mobileMenuOpen]);
-
-  const handleOpenTurno = () => {
-    closeMenu();
-    openTurno();
-  };
 
   const handleSignOut = async () => {
     try {
@@ -133,70 +130,92 @@ export default function Navbar() {
             </nav>
           </div>
 
-          {/* CTA Desktop: Botón Agenda tu turno */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-2">
+            {/* Carrito desktop */}
             <button
               type="button"
-              onClick={handleOpenTurno}
-              className="inline-flex items-center gap-1.5 px-4 py-2 min-h-[44px] rounded-full bg-gradient-to-r from-[#5A0B22] to-[#7A1333] text-white text-xs font-semibold tracking-wide shadow-sm hover:shadow-md hover:scale-105 active:scale-95 transition-all cursor-pointer focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5A0B22]"
+              onClick={openCart}
+              aria-label={cartAriaLabel}
+              className="relative inline-flex items-center justify-center w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-white border border-[#5A0B22]/15 text-[#5A0B22] hover:bg-[#FFC9D6]/30 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5A0B22]"
             >
-              <Calendar className="w-3.5 h-3.5 text-[#F7E7B4]" />
-              <span>Agenda tu turno</span>
+              <ShoppingCart size={18} aria-hidden="true" />
+              {itemCount > 0 && (
+                <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-[#D4AF37] text-[#5A0B22] text-[10px] font-bold flex items-center justify-center border border-white">
+                  {itemCount > 99 ? '99+' : itemCount}
+                </span>
+              )}
             </button>
-            
+
             {/* Auth buttons desktop */}
             {user ? (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 {isAdmin && (
                   <Link
                     to="/admin"
-                    className="inline-flex items-center gap-1.5 px-3 py-2 min-h-[44px] rounded-full bg-gradient-to-r from-[#7A1333] to-[#5A0B22] text-white text-xs font-semibold tracking-wide shadow-sm hover:shadow-md transition cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 min-h-[34px] rounded-full bg-gradient-to-r from-[#7A1333] to-[#5A0B22] text-white text-[11px] font-semibold tracking-wide shadow-sm hover:shadow-md transition cursor-pointer"
                   >
-                    <User size={14} />
+                    <User size={13} />
                     <span>Panel Admin</span>
                   </Link>
                 )}
                 <Link
                   to="/cuenta"
-                  className="inline-flex items-center gap-1.5 px-3 py-2 min-h-[44px] rounded-full bg-white border border-[#5A0B22]/15 text-[#5A0B22] font-semibold text-sm hover:bg-[#FFC9D6]/30 transition-colors"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 min-h-[34px] rounded-full bg-white border border-[#5A0B22]/15 text-[#5A0B22] font-semibold text-xs hover:bg-[#FFC9D6]/30 transition-colors"
                 >
-                  <User size={14} />
-                  <span className="hidden sm:inline">{user?.user_metadata?.full_name || user?.email?.split('@')[0]}</span>
+                  <User size={13} />
+                  <span className="hidden sm:inline max-w-[110px] truncate">{user?.user_metadata?.full_name || user?.email?.split('@')[0]}</span>
                 </Link>
                 <button
                   type="button"
                   onClick={handleSignOut}
-                  className="inline-flex items-center gap-1.5 px-3 py-2 min-h-[44px] rounded-full bg-white border border-[#5A0B22]/15 text-[#5A0B22] font-semibold text-sm hover:bg-[#FFC9D6]/30 transition-colors"
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 min-h-[34px] rounded-full bg-white border border-[#5A0B22]/15 text-[#5A0B22] font-semibold text-xs hover:bg-[#FFC9D6]/30 transition-colors"
                 >
-                  <LogOut size={14} />
+                  <LogOut size={13} />
                   <span className="hidden sm:inline">Salir</span>
                 </button>
               </div>
             ) : (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 <Link
                   to="/login"
-                  className="inline-flex items-center gap-1.5 px-3 py-2 min-h-[44px] rounded-full bg-white border border-[#5A0B22]/15 text-[#5A0B22] font-semibold text-sm hover:bg-[#FFC9D6]/30 transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[36px] rounded-full bg-white border border-[#5A0B22]/15 text-[#5A0B22] font-semibold text-xs hover:bg-[#FFC9D6]/30 transition-colors"
                 >
-                  <LogIn size={14} />
+                  <LogIn size={13} />
                   <span>Ingresar</span>
                 </Link>
               </div>
             )}
           </div>
 
-          {/* Hamburger móvil */}
-          <button
-            ref={menuButtonRef}
-            type="button"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label={mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
-            aria-expanded={mobileMenuOpen}
-            aria-controls="mobile-menu"
-            className="md:hidden w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full text-[#5A0B22] hover:bg-[#5A0B22]/8 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5A0B22]"
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          {/* Acciones móvil: carrito + hamburguesa */}
+          <div className="md:hidden flex items-center gap-1">
+            <button
+              type="button"
+              onClick={openCart}
+              aria-label={cartAriaLabel}
+              className="relative inline-flex items-center justify-center w-11 h-11 min-w-[44px] min-h-[44px] rounded-full text-[#5A0B22] hover:bg-[#5A0B22]/8 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5A0B22]"
+            >
+              <ShoppingCart className="w-6 h-6" aria-hidden="true" />
+              {itemCount > 0 && (
+                <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-[#D4AF37] text-[#5A0B22] text-[10px] font-bold flex items-center justify-center border border-white">
+                  {itemCount > 99 ? '99+' : itemCount}
+                </span>
+              )}
+            </button>
+
+            {/* Hamburger móvil */}
+            <button
+              ref={menuButtonRef}
+              type="button"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label={mobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-menu"
+              className="md:hidden w-11 h-11 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full text-[#5A0B22] hover:bg-[#5A0B22]/8 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5A0B22]"
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
 
         {/* Menú Desplegable Móvil */}
@@ -212,6 +231,25 @@ export default function Navbar() {
               className="md:hidden absolute left-0 right-0 top-full z-50 bg-white/95 backdrop-blur-lg px-6 py-6 shadow-2xl rounded-b-3xl overflow-hidden max-h-[calc(100vh-5rem)] overflow-y-auto"
             >
               <div className="flex flex-col gap-1 font-medium text-base text-[#5A0B22]">
+                <button
+                  type="button"
+                  onClick={() => {
+                    closeMenu();
+                    openCart();
+                  }}
+                  className="min-h-[44px] py-3 border-b border-[#FFC9D6]/60 flex items-center justify-between text-left"
+                >
+                  <span className="inline-flex items-center gap-2">
+                    <ShoppingCart className="w-5 h-5 text-[#7A1333]" aria-hidden="true" />
+                    Mi carrito
+                  </span>
+                  {itemCount > 0 && (
+                    <span className="min-w-[22px] h-[22px] px-1.5 rounded-full bg-[#D4AF37] text-[#5A0B22] text-xs font-bold flex items-center justify-center">
+                      {itemCount > 99 ? '99+' : itemCount}
+                    </span>
+                  )}
+                </button>
+
                 {navLinks.map((link) => (
                   <Link
                     key={link.path}
@@ -224,17 +262,6 @@ export default function Navbar() {
                     <ChevronRight className="w-4 h-4 text-[#7A1333]" />
                   </Link>
                 ))}
-
-                <div className="pt-4 flex flex-col items-stretch gap-2.5">
-                  <button
-                    type="button"
-                    onClick={handleOpenTurno}
-                    className="w-full min-h-[44px] py-3 px-4 rounded-xl bg-gradient-to-r from-[#5A0B22] to-[#7A1333] text-white font-medium text-sm flex items-center justify-center gap-2 shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5A0B22]"
-                  >
-                    <Calendar className="w-4 h-4 text-[#F7E7B4]" />
-                    <span>Agenda tu turno</span>
-                  </button>
-                </div>
 
                 {/* Auth section mobile */}
                 {user ? (
