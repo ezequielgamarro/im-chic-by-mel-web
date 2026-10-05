@@ -37,8 +37,20 @@ const TIME_SLOTS = [
   '09:30', '11:00', '14:00', '15:30', '17:00', '18:30', '19:30'
 ];
 
-// Mapea el nombre de servicio mostrado a la categoría usada en admin_settings.service_durations
-function getCategoryKey(displayName, durations = {}) {
+// Mapea el nombre de servicio mostrado a la categoría usada en admin_settings.service_durations.
+// Prioriza la categoría real cargada desde la DB (categoryByService); si no, el texto actual.
+function getCategoryKey(displayName, durations = {}, categoryByService = {}) {
+  // 1) Prioridad: categoría real del servicio cargada desde la DB (spec 013)
+  const raw = categoryByService[displayName];
+  if (raw) {
+    const key = String(raw)
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, ''); // 'Uñas' → 'unas'
+    if (durations[key]) return key; // solo si admin_settings la conoce
+    if (['unas', 'cabello', 'maquillaje', 'packs'].includes(key)) return key;
+  }
+  // 2) Fallback: lógica actual por texto (sin cambios)
   const name = (displayName || '').toLowerCase();
   if (name.includes('uña')) return 'unas';
   if (name.includes('cabello')) return 'cabello';
@@ -51,8 +63,8 @@ function getCategoryKey(displayName, durations = {}) {
 }
 
 // Devuelve { [categoryKey]: minutos } para que CalendarAvailability encuentre la duración
-function getNormalizedDurations(displayName, durations = {}) {
-  const key = getCategoryKey(displayName, durations);
+function getNormalizedDurations(displayName, durations = {}, categoryByService = {}) {
+  const key = getCategoryKey(displayName, durations, categoryByService);
   const minutes = (durations && durations[key]) || 60;
   return { [key]: minutes };
 }
@@ -290,6 +302,14 @@ function TurnoModalEnhanced({ isOpen, onClose, initialService = '' }) {
     business_hours: {},
     slot_granularity_minutes: 15,
   });
+  // Servicios visibles para el select público (init = fallback hardcodeado spec 013)
+  const [serviceOptions, setServiceOptions] = useState(SERVICE_OPTIONS);
+  // Categoría real (DB) por nombre de servicio: alimenta getCategoryKey
+  const [dbCategoryByService, setDbCategoryByService] = useState({});
+  // Spec 016: duración variable por servicio (clave = nombre del servicio).
+  // Sin migración 016 aplicada quedan vacíos → fallback a serviceDurations.
+  const [dbTextByService, setDbTextByService] = useState({}); // name → estimated_duration_text
+  const [dbDurationByService, setDbDurationByService] = useState({}); // name → block_minutes
 
   // Cargar configuración del admin (duraciones, horarios, granularidad) desde la vista pública
   useEffect(() => {
@@ -312,6 +332,47 @@ function TurnoModalEnhanced({ isOpen, onClose, initialService = '' }) {
             slot_granularity_minutes: data.slot_granularity_minutes || 15,
           });
         }
+      });
+    return () => {
+      mounted = false;
+    };
+  }, [isOpen]);
+
+  // Cargar servicios activos desde la DB (spec 013). Fallback silencioso a
+  // SERVICE_OPTIONS si la tabla no existe (migración pendiente: 42P01/PGRST205)
+  // o no hay filas: el modal nunca se rompe por esto.
+  // Spec 016: select('*') en lugar de columnas explícitas para evitar PGRST204
+  // si la migración 016 (estimated_duration_text/block_minutes) no está aplicada;
+  // solo se leen campos por nombre y los maps nuevos quedan vacíos/nulos.
+  useEffect(() => {
+    if (!isOpen) return;
+    let mounted = true;
+    supabase
+      .from('services')
+      .select('*')
+      .eq('is_active', true)
+      .order('sort_order', { ascending: true })
+      .then(({ data, error }) => {
+        if (error || !data || data.length === 0) {
+          console.warn(
+            '[services] Fallback a SERVICE_OPTIONS:',
+            error?.message || 'sin servicios activos'
+          );
+          return; // serviceOptions sigue en SERVICE_OPTIONS
+        }
+        if (!mounted) return;
+        setServiceOptions(data.map((s) => s.name));
+        setDbCategoryByService(
+          Object.fromEntries(data.map((s) => [s.name, s.category]))
+        );
+        // Spec 016: campos de duración variable. Sin las columnas en la DB
+        // llegan undefined → ?? null → sin texto y sin block_minutes.
+        setDbTextByService(
+          Object.fromEntries(data.map((s) => [s.name, s.estimated_duration_text ?? null]))
+        );
+        setDbDurationByService(
+          Object.fromEntries(data.map((s) => [s.name, s.block_minutes ?? null]))
+        );
       });
     return () => {
       mounted = false;
@@ -491,13 +552,14 @@ function TurnoModalEnhanced({ isOpen, onClose, initialService = '' }) {
 
   useEffect(() => {
     if (!isOpen) return;
-    // Servicio por defecto: el inicial, o el primero de la lista
+    // Servicio por defecto: el inicial, o el primero de la lista (serviceOptions
+    // arranca como SERVICE_OPTIONS y puede reemplazarse por la lista de la DB).
     const defaultService = (() => {
       if (initialService) {
-        const found = SERVICE_OPTIONS.find((s) => s.toLowerCase().includes(initialService.toLowerCase()));
+        const found = serviceOptions.find((s) => s.toLowerCase().includes(initialService.toLowerCase()));
         return found || initialService;
       }
-      return SERVICE_OPTIONS[0];
+      return serviceOptions[0];
     })();
     setSelectedService(defaultService);
     // Datos del cliente desde el perfil del usuario logueado (sin formulario intermedio)
@@ -520,6 +582,25 @@ function TurnoModalEnhanced({ isOpen, onClose, initialService = '' }) {
     // y resetearía el modal al calendario. Solo queremos inicializar al ABRIR.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, initialService]);
+
+  // Carrera open→carga: si al llegar la lista de DB el servicio por defecto ya no
+  // existe (o sigue vacío), re-aplicar el default. Nunca pisar la elección del usuario.
+  useEffect(() => {
+    if (!isOpen) return;
+    if (selectedService && serviceOptions.includes(selectedService)) return;
+    const fallback = (() => {
+      if (initialService) {
+        const found = serviceOptions.find((s) =>
+          s.toLowerCase().includes(initialService.toLowerCase())
+        );
+        return found || initialService;
+      }
+      return serviceOptions[0];
+    })();
+    setSelectedService(fallback);
+    setFormData((prev) => (prev ? { ...prev, service: fallback } : prev));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [serviceOptions]);
 
   if (!isOpen) return null;
 
@@ -558,17 +639,30 @@ function TurnoModalEnhanced({ isOpen, onClose, initialService = '' }) {
                 onChange={(e) => setSelectedService(e.target.value)}
                 className="w-full min-h-[44px] px-4 py-2.5 rounded-xl border border-[#FFC9D6]/80 bg-white text-[#5A0B22] text-sm focus:outline-none focus:ring-2 focus:ring-[#D87F95] transition-all"
               >
-                {SERVICE_OPTIONS.map((opt) => (
+                {serviceOptions.map((opt) => (
                   <option key={opt} value={opt}>{opt}</option>
                 ))}
               </select>
+              {/* Spec 016 (RF-09): texto estimado visible para el cliente.
+                  Solo si hay servicio seleccionado Y texto; role="status" anuncia
+                  el cambio al elegir otro servicio. Sin texto, no se renderiza. */}
+              {selectedService && dbTextByService[selectedService] ? (
+                <p
+                  role="status"
+                  className="mt-2 text-sm text-[#7A1333] font-medium flex items-center gap-1.5"
+                >
+                  <span aria-hidden="true">⏱️</span>
+                  <span>Tiempo estimado: {dbTextByService[selectedService]}</span>
+                </p>
+              ) : null}
             </div>
 
             <CalendarAvailability
-              selectedService={getCategoryKey(selectedService, adminSettings.service_durations)}
+              selectedService={getCategoryKey(selectedService, adminSettings.service_durations, dbCategoryByService)}
               onSlotSelected={handleSlotSelected}
-              serviceDurations={getNormalizedDurations(selectedService, adminSettings.service_durations)}
+              serviceDurations={getNormalizedDurations(selectedService, adminSettings.service_durations, dbCategoryByService)}
               businessHours={adminSettings.business_hours}
+              serviceBlockMinutes={dbDurationByService[selectedService] ?? null}
               slotGranularity={adminSettings.slot_granularity_minutes}
               disabled={loading}
             />

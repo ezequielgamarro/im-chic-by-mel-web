@@ -15,6 +15,9 @@ export function CalendarAvailability({
   selectedService,
   serviceDurations,
   businessHours,
+  // Spec 016 (RF-14): minutos MÁXIMOS que el servicio bloquea en la agenda.
+  // Prop opcional; default null = degrada al mapa por categoría (serviceDurations).
+  serviceBlockMinutes = null,
   slotGranularity = 15,
   disabled = false 
 }) {
@@ -95,7 +98,9 @@ export function CalendarAvailability({
   const generateAvailableHours = useCallback((dayStr) => {
     if (!selectedService || !serviceDurations[selectedService]) return [];
     
-    const duration = serviceDurations[selectedService] || 60;
+    // Spec 016 (RF-11): duración a bloquear = EXCLUSIVAMENTE block_minutes del
+    // servicio si existe; si no, fallback al mapa por categoría y por último 60.
+    const duration = serviceBlockMinutes || serviceDurations[selectedService] || 60;
     const dayObj = new Date(dayStr);
     const dayName = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][dayObj.getDay()];
     const daySchedule = businessHours?.[dayName];
@@ -113,7 +118,7 @@ export function CalendarAvailability({
     current.setHours(openH, openM, 0, 0);
     const endTime = new Date(dayStr);
     endTime.setHours(closeH, closeM, 0, 0);
-    endTime.setMinutes(endTime.getMinutes() - (serviceDurations[selectedService] || 60));
+    endTime.setMinutes(endTime.getMinutes() - duration);
 
     const granularity = slotGranularity || 15;
     
@@ -122,7 +127,7 @@ export function CalendarAvailability({
       const slotStart = new Date(dayStr);
       const [h, m] = timeStr.split(':').map(Number);
       slotStart.setHours(h, m, 0, 0);
-      const slotEnd = new Date(slotStart.getTime() + (serviceDurations[selectedService] || 60) * 60000);
+      const slotEnd = new Date(slotStart.getTime() + duration * 60000);
       
       // Check if slot overlaps with busy slots
       let isBusy = false;
@@ -146,11 +151,16 @@ export function CalendarAvailability({
         isPast,
       });
       
+      // Spec 016 (RF-13): slotGranularity es SOLO el paso entre inicios candidatos
+      // (resolución de la grilla), NO limita la longitud del bloqueo: esa la
+      // determina exclusivamente `duration` (block_minutes del servicio).
+      // Ej.: granularidad 15 + block_minutes 120 → inicios cada 15 min, cada
+      // uno reserva 120 min de agenda.
       current.setMinutes(current.getMinutes() + (slotGranularity || 15));
     }
     
     return slots;
-  }, [busySlots, businessHours, selectedService, serviceDurations, slotGranularity]);
+  }, [busySlots, businessHours, selectedService, serviceDurations, serviceBlockMinutes, slotGranularity]);
 
   // Handle day selection
   const handleDayClick = (dayStr) => {
@@ -207,7 +217,9 @@ export function CalendarAvailability({
   const isDayAvailable = (dayStr) => {
     if (dayStr < todayStr) return false;
     if (!selectedService || !serviceDurations[selectedService]) return false;
-    const duration = serviceDurations[selectedService] || 60;
+    // Spec 016 (RF-11): misma prioridad que generateAvailableHours (el corte
+    // real lo hace esa función; acá se mantiene la variable por consistencia).
+    const duration = serviceBlockMinutes || serviceDurations[selectedService] || 60;
     const dayObj = new Date(dayStr);
     const dayName = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][dayObj.getDay()];
     const daySchedule = businessHours?.[dayName];
@@ -403,7 +415,7 @@ export function CalendarAvailability({
                 onClick={() => onSlotSelected?.({
                   service: selectedService,
                   datetime: new Date(`${selectedDay}T${selectedSlot}:00`).toISOString(),
-                  duration: serviceDurations[selectedService] || 60,
+                  duration: serviceBlockMinutes || serviceDurations[selectedService] || 60,
                 })}
                 className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-[#5A0B22] via-[#7A1333] to-[#5A0B22] text-white font-semibold text-base shadow-lg hover:shadow-xl transition-all min-h-[48px] flex items-center justify-center gap-2"
               >

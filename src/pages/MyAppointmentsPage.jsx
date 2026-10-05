@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase';
 import { formatServiceName } from '../utils/serviceNames';
+import AddToCalendarButton from '../components/AddToCalendarButton';
 import { Calendar, Clock, XCircle, CheckCircle2, AlertCircle, Info } from 'lucide-react';
 
 const STATUS_LABELS = {
@@ -267,15 +268,20 @@ function MyAppointmentsPage() {
                   </div>
 
                   {apt.status === 'confirmado' && (
-                    <div className="pt-2 border-t border-[#5A0B22]/10">
+                    <div className="pt-2 border-t border-[#5A0B22]/10 grid grid-cols-1 sm:grid-cols-2 gap-2">
                       <button
                         type="button"
                         onClick={() => handleCancel(apt)}
-                        className="w-full py-2 px-4 rounded-xl bg-red-50 border border-red-200 text-red-700 font-medium text-sm hover:bg-red-100 transition-colors flex items-center justify-center gap-2"
+                        className="w-full min-h-[44px] py-2 px-4 rounded-xl bg-red-50 border border-red-200 text-red-700 font-medium text-sm hover:bg-red-100 transition-colors flex items-center justify-center gap-2"
                       >
                         <XCircle size={16} aria-hidden="true" />
                         <span>Cancelar turno</span>
                       </button>
+                      <AddToCalendarButton
+                        serviceName={formatServiceName(apt.service_key || apt.service)}
+                        scheduledAt={apt.scheduled_at}
+                        notes={apt.notes || ''}
+                      />
                     </div>
                   )}
                 </div>
