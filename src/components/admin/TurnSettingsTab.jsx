@@ -1,8 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../context/AuthContext';
+import CustomCheckbox from '../CustomCheckbox';
 
 const CATEGORIAS_SERVICIOS = ['unas', 'cabello', 'maquillaje', 'packs'];
+
+// Etiquetas legibles para el texto visible (spec 013 RF-A1). El estado/guardado
+// sigue usando las claves crudas de CATEGORIAS_SERVICIOS.
+const CAT_LABELS = { unas: 'Uñas', cabello: 'Cabello', maquillaje: 'Maquillaje', packs: 'Packs' };
 
 const DIAS_SEMANA = [
   { key: 'mon', label: 'Lunes' },
@@ -266,8 +271,8 @@ export function TurnSettingsTab() {
           {CATEGORIAS_SERVICIOS.map(function(cat) {
             return (
               <div key={cat} className="flex items-center gap-3">
-                <label htmlFor={"dur-" + cat} className="w-32 font-medium text-[#5A0B22] capitalize">
-                  {cat}
+                <label htmlFor={"dur-" + cat} className="w-32 font-medium text-[#5A0B22]">
+                  {CAT_LABELS[cat] || cat}
                 </label>
                 <input
                   type="number"
@@ -305,15 +310,11 @@ export function TurnSettingsTab() {
 
             return (
               <div key={day.key} className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
-                <label className="flex items-center gap-2 w-20">
-                  <input
-                    type="checkbox"
-                    checked={isOpen}
-                    onChange={function() { handleDayToggle(day.key); }}
-                    className="w-4 h-4 text-[#7A1333] border-[#FFC9D6] rounded focus:ring-2 focus:ring-[#7A1333]"
-                  />
-                  <span className="font-medium text-[#5A0B22] capitalize">{day.label}</span>
-                </label>
+                <CustomCheckbox
+                  label={day.label}
+                  checked={isOpen}
+                  onChange={function() { handleDayToggle(day.key); }}
+                />
 
                 {isOpen && (
                   <div className="flex items-center gap-2 flex-1">

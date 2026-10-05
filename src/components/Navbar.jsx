@@ -158,13 +158,15 @@ export default function Navbar() {
                     <span>Panel Admin</span>
                   </Link>
                 )}
-                <Link
-                  to="/cuenta"
-                  className="inline-flex items-center gap-1.5 px-2.5 py-1.5 min-h-[34px] rounded-full bg-white border border-[#5A0B22]/15 text-[#5A0B22] font-semibold text-xs hover:bg-[#FFC9D6]/30 transition-colors"
-                >
-                  <User size={13} />
-                  <span className="hidden sm:inline max-w-[110px] truncate">{user?.user_metadata?.full_name || user?.email?.split('@')[0]}</span>
-                </Link>
+                {!isAdmin && (
+                  <Link
+                    to="/cuenta"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1.5 min-h-[34px] rounded-full bg-white border border-[#5A0B22]/15 text-[#5A0B22] font-semibold text-xs hover:bg-[#FFC9D6]/30 transition-colors"
+                  >
+                    <User size={13} />
+                    <span className="hidden sm:inline max-w-[110px] truncate">{user?.user_metadata?.full_name || user?.email?.split('@')[0]}</span>
+                  </Link>
+                )}
                 <button
                   type="button"
                   onClick={handleSignOut}
@@ -276,14 +278,16 @@ export default function Navbar() {
                         <span>Panel Admin</span>
                       </Link>
                     )}
-                    <Link
-                      to="/cuenta"
-                      onClick={closeMenu}
-                      className="w-full min-h-[44px] py-2 px-4 rounded-xl bg-white border border-[#5A0B22]/15 text-[#5A0B22] font-semibold text-sm hover:bg-[#FFC9D6]/30 transition-colors flex items-center justify-center gap-2"
-                    >
-                      <User size={18} />
-                      <span>{user?.user_metadata?.full_name || user?.email?.split('@')[0]}</span>
-                    </Link>
+                    {!isAdmin && (
+                      <Link
+                        to="/cuenta"
+                        onClick={closeMenu}
+                        className="w-full min-h-[44px] py-2 px-4 rounded-xl bg-white border border-[#5A0B22]/15 text-[#5A0B22] font-semibold text-sm hover:bg-[#FFC9D6]/30 transition-colors flex items-center justify-center gap-2"
+                      >
+                        <User size={18} />
+                        <span>{user?.user_metadata?.full_name || user?.email?.split('@')[0]}</span>
+                      </Link>
+                    )}
                     <button
                       type="button"
                       onClick={handleSignOut}

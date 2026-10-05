@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   LogOut,
   Package,
@@ -10,6 +10,7 @@ import {
   Settings,
   Calendar,
   CalendarCheck,
+  Scissors,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../context/AuthContext';
@@ -17,6 +18,7 @@ import ProductList from '../components/admin/ProductList';
 import ProductForm from '../components/admin/ProductForm';
 import TurnSettingsTab from '../components/admin/TurnSettingsTab';
 import TurnosTab from '../components/admin/TurnosTab';
+import ServicesTab from '../components/admin/ServicesTab';
 
 /**
  * Panel de administración (T7…T15).
@@ -27,7 +29,7 @@ import TurnosTab from '../components/admin/TurnosTab';
 export default function AdminPage() {
   const { signOut } = useAuth();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('products'); // 'products' | 'appointments' | 'settings'
+  const [activeTab, setActiveTab] = useState('products'); // 'products' | 'appointments' | 'settings' | 'services'
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -148,17 +150,36 @@ export default function AdminPage() {
     <div className="premium-page min-h-screen bg-[#FFF0F3] text-[#5A0B22] font-sans">
       <header className="premium-header sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <p className="font-script text-lg leading-none text-[#7A1333]">
-              Im Chic by Mel
-            </p>
-            <h1 className="font-serif text-xl sm:text-2xl font-bold">
-              Panel de Administración
-            </h1>
+          <div className="flex items-center gap-3 min-w-0">
+            <Link
+              to="/"
+              aria-label="Volver al inicio"
+              title="Volver al inicio"
+              className="shrink-0 w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-white border border-[#FFC9D6] shadow-sm overflow-hidden flex items-center justify-center hover:shadow-md hover:border-[#7A1333]/40 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5A0B22]"
+            >
+              <img
+                src="/assets/logo-im-chic.png"
+                alt=""
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                  e.target.parentElement.innerHTML = '<span class="font-serif font-bold text-sm text-[#5A0B22]">IC</span>';
+                }}
+              />
+            </Link>
+            <div className="min-w-0">
+              <p className="font-script text-lg leading-none text-[#7A1333]">
+                Im Chic by Mel
+              </p>
+              <h1 className="font-serif text-xl sm:text-2xl font-bold truncate">
+                Panel de Administración
+              </h1>
+            </div>
           </div>
           
           {/* Tab Navigation */}
-          <nav className="premium-card-soft flex gap-1 p-1" aria-label="Secciones del panel">
+          {/* flex-wrap: con 4 pestañas los botones no caben en 320px en una sola fila */}
+          <nav className="premium-card-soft flex flex-wrap gap-1 p-1" aria-label="Secciones del panel">
             <button
               type="button"
               onClick={() => setActiveTab('products')}
@@ -199,6 +220,18 @@ export default function AdminPage() {
             >
               <Settings size={18} aria-hidden="true" />
               <span>Config. Turnos</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveTab('services')}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors min-h-[44px] flex items-center gap-2 ${
+                activeTab === 'services'
+                  ? 'bg-gradient-to-r from-[#7A1333] to-[#5A0B22] text-white shadow-sm'
+                  : 'text-[#5A0B22]/70 hover:bg-[#FFC9D6]/30'
+              }`}
+            >
+              <Scissors size={18} aria-hidden="true" />
+              <span>Servicios</span>
             </button>
           </nav>
 
@@ -337,6 +370,8 @@ export default function AdminPage() {
           </>
         ) : activeTab === 'appointments' ? (
           <TurnosTab />
+        ) : activeTab === 'services' ? (
+          <ServicesTab />
         ) : (
           <TurnSettingsTab />
         )}
